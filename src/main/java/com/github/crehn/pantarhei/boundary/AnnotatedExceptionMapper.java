@@ -18,6 +18,7 @@ public class AnnotatedExceptionMapper implements ExceptionMapper<Exception> {
 	private static final String CONTENT_TYPE = "application/problem+json";
 	private static final String URN_PROBLEM_PREFIX = "urn:problem:";
 
+	// TODO: merge with https://github.com/t1/problem-detail as soon as it can be retrieved from bintray
 	@Value
 	@Builder
 	public static class Problem {
