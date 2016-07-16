@@ -51,6 +51,7 @@
 	</build>
 
 	<dependencies>
+		<!-- provided dependencies -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -98,6 +99,13 @@
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>swagger-webapp</artifactId>
+		</dependency> 
+
+		<!-- libs -->
+		<dependency>
+			<groupId>com.github.t1</groupId>
+			<artifactId>logging-interceptor</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 
 		<!-- test dependencies -->
