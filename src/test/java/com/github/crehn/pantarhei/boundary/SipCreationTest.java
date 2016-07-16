@@ -3,41 +3,16 @@ package com.github.crehn.pantarhei.boundary;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
-import java.util.UUID;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.github.crehn.pantarhei.api.Sip;
-import com.github.crehn.pantarhei.control.SipFacade;
 import com.github.crehn.pantarhei.data.SipEntity;
-import com.github.crehn.pantarhei.data.SipStore;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SipCreationTest {
-	private static final UUID GUID = UUID.randomUUID();
-	private static final UUID OTHER_GUID = UUID.randomUUID();
-	private static final Sip SIP = Sip.builder() //
-			.guid(GUID) //
-			.title("title") //
-			.build();
-
-	@InjectMocks
-	SipBoundary boundary;
-
-	@Spy
-	@InjectMocks
-	SipFacade facade = new SipFacade();
-
-	@Mock
-	SipStore store;
-
+public class SipCreationTest extends AbstractSipBoundaryTest {
 	@Captor
 	ArgumentCaptor<SipEntity> sipEntityCaptor;
 
@@ -52,7 +27,15 @@ public class SipCreationTest {
 
 		verify(store).store(sipEntityCaptor.capture());
 		SipEntity sipEntity = sipEntityCaptor.getValue();
+
+		assertSipEntity(sipEntity);
+	}
+
+	private void assertSipEntity(SipEntity sipEntity) {
 		assertEquals(SIP.getGuid(), sipEntity.getGuid());
 		assertEquals(SIP.getTitle(), sipEntity.getTitle());
+		assertEquals(SIP.getSummary(), sipEntity.getSummary());
+		assertEquals(SIP.getText(), sipEntity.getText());
+		assertEquals(SIP.getSourceUri(), sipEntity.getSourceUri());
 	}
 }

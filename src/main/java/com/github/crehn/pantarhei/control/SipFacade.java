@@ -14,8 +14,18 @@ public class SipFacade {
 	private SipStore store;
 
 	public Sip getSip(UUID guid) {
-		// TODO Auto-generated method stub
-		return null;
+		SipEntity sipEntity = store.getSipByGuid(guid);
+		return toSip(sipEntity);
+	}
+
+	private Sip toSip(SipEntity entity) {
+		return Sip.builder() //
+				.guid(entity.getGuid()) //
+				.title(entity.getTitle()) //
+				.summary(entity.getSummary()) //
+				.text(entity.getText()) //
+				.sourceUri(entity.getSourceUri()) //
+				.build();
 	}
 
 	public void storeSip(Sip sip) {
@@ -26,7 +36,9 @@ public class SipFacade {
 		return SipEntity.builder() //
 				.guid(sip.getGuid()) //
 				.title(sip.getTitle()) //
+				.summary(sip.getSummary()) //
+				.text(sip.getText()) //
+				.sourceUri(sip.getSourceUri()) //
 				.build();
 	}
-
 }
