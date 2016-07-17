@@ -1,5 +1,6 @@
 package com.github.crehn.pantarhei.boundary;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +22,7 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
     }
 
     private void givenUnknownSip() {
-        when(store.getSipByGuid(OTHER_GUID)).thenThrow(new SipNotFoundException(OTHER_GUID));
+        when(sipStore.getSipByGuid(OTHER_GUID)).thenThrow(new SipNotFoundException(OTHER_GUID));
     }
 
     @Test
@@ -34,7 +35,7 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
     }
 
     private void givenSipEntity() {
-        when(store.getSipByGuid(GUID)).thenReturn(SIP_ENTITY);
+        when(sipStore.getSipByGuid(GUID)).thenReturn(SIP_ENTITY);
     }
 
     private void assertSip(Sip result) {
@@ -43,5 +44,6 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
         assertEquals(SIP_ENTITY.getSummary(), result.getSummary());
         assertEquals(SIP_ENTITY.getText(), result.getText());
         assertEquals(SIP_ENTITY.getSourceUri(), result.getSourceUri());
+        assertThat(result.getTags()).containsExactly(TAG1, TAG2);
     }
 }

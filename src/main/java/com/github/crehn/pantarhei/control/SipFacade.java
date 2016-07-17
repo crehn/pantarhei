@@ -1,20 +1,26 @@
 package com.github.crehn.pantarhei.control;
 
-import java.util.UUID;
+import static java.util.stream.Collectors.toList;
+
+import java.util.*;
 
 import javax.inject.Inject;
 
 import com.github.crehn.pantarhei.api.Sip;
-import com.github.crehn.pantarhei.data.SipEntity;
-import com.github.crehn.pantarhei.data.SipStore;
+import com.github.crehn.pantarhei.data.*;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SipFacade {
 
     @Inject
-    private SipStore store;
+    private SipStore sipStore;
+    @Inject
+    private TagStore tagStore;
 
     public Sip getSip(UUID guid) {
-        SipEntity sipEntity = store.getSipByGuid(guid);
+        SipEntity sipEntity = sipStore.getSipByGuid(guid);
         return toSip(sipEntity);
     }
 
@@ -25,11 +31,18 @@ public class SipFacade {
                 .summary(entity.getSummary()) //
                 .text(entity.getText()) //
                 .sourceUri(entity.getSourceUri()) //
+                .tags(toApi(entity.getTags())) //
                 .build();
     }
 
+    private List<String> toApi(List<TagEntity> tags) {
+        return tags.stream() //
+                .map(TagEntity::getName) //
+                .collect(toList());
+    }
+
     public void storeSip(Sip sip) {
-        store.store(toEntity(sip));
+        sipStore.store(toEntity(sip));
     }
 
     private SipEntity toEntity(Sip sip) {
@@ -39,6 +52,26 @@ public class SipFacade {
                 .summary(sip.getSummary()) //
                 .text(sip.getText()) //
                 .sourceUri(sip.getSourceUri()) //
+                .tags(getTagEntities(sip.getTags())) //
                 .build();
+    }
+
+    private List<TagEntity> getTagEntities(List<String> tags) {
+        List<TagEntity> tagsInDb = tagStore.findTagsByNames(tags);
+        List<String> alreadyFoundEntities = tagsInDb.stream() //
+                .map(TagEntity::getName) //
+                .collect(toList());
+        log.debug("found tags in db: {}", alreadyFoundEntities);
+
+        List<TagEntity> newlyCreatedTags = tags.stream() //
+                .filter(tag -> !alreadyFoundEntities.contains(tag)) //
+                .map(TagEntity::new) //
+                .collect(toList());
+        log.debug("create new tags: {}", newlyCreatedTags);
+
+        List<TagEntity> result = new ArrayList<>();
+        result.addAll(tagsInDb);
+        result.addAll(newlyCreatedTags);
+        return result;
     }
 }
