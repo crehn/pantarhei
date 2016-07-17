@@ -17,21 +17,21 @@ import com.github.t1.log.Logged;
 @Logged(level = INFO)
 public class SipBoundary {
 
-	@Inject
-	private SipFacade facade;
+    @Inject
+    private SipFacade facade;
 
-	@GET
-	@Path("/{guid}")
-	public Sip getSip(@PathParam("guid") UUID guid) {
-		return facade.getSip(guid);
-	}
+    @GET
+    @Path("/{guid}")
+    public Sip getSip(@PathParam("guid") UUID guid) {
+        return facade.getSip(guid);
+    }
 
-	@PUT
-	@Path("/{guid}")
-	public void putSip(@PathParam("guid") UUID guid, Sip sip) {
-		if (!guid.equals(sip.getGuid()))
-			throw new IllegalArgumentException("guid in path must match guid in sip");
+    @PUT
+    @Path("/{guid}")
+    public void putSip(@PathParam("guid") UUID guid, Sip sip) {
+        if (!guid.equals(sip.getGuid()))
+            throw new IllegalArgumentException("guid in path must match guid in sip");
 
-		facade.storeSip(sip);
-	}
+        facade.storeSip(sip);
+    }
 }

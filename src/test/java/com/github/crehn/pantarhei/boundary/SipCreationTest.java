@@ -13,29 +13,29 @@ import com.github.crehn.pantarhei.data.SipEntity;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SipCreationTest extends AbstractSipBoundaryTest {
-	@Captor
-	ArgumentCaptor<SipEntity> sipEntityCaptor;
+    @Captor
+    ArgumentCaptor<SipEntity> sipEntityCaptor;
 
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldFailCreatingSipForWrongLocation() throws Exception {
-		boundary.putSip(OTHER_GUID, SIP);
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldFailCreatingSipForWrongLocation() throws Exception {
+        boundary.putSip(OTHER_GUID, SIP);
+    }
 
-	@Test
-	public void shouldStoreNewSip() throws Exception {
-		boundary.putSip(GUID, SIP);
+    @Test
+    public void shouldStoreNewSip() throws Exception {
+        boundary.putSip(GUID, SIP);
 
-		verify(store).store(sipEntityCaptor.capture());
-		SipEntity sipEntity = sipEntityCaptor.getValue();
+        verify(store).store(sipEntityCaptor.capture());
+        SipEntity sipEntity = sipEntityCaptor.getValue();
 
-		assertSipEntity(sipEntity);
-	}
+        assertSipEntity(sipEntity);
+    }
 
-	private void assertSipEntity(SipEntity sipEntity) {
-		assertEquals(SIP.getGuid(), sipEntity.getGuid());
-		assertEquals(SIP.getTitle(), sipEntity.getTitle());
-		assertEquals(SIP.getSummary(), sipEntity.getSummary());
-		assertEquals(SIP.getText(), sipEntity.getText());
-		assertEquals(SIP.getSourceUri(), sipEntity.getSourceUri());
-	}
+    private void assertSipEntity(SipEntity sipEntity) {
+        assertEquals(SIP.getGuid(), sipEntity.getGuid());
+        assertEquals(SIP.getTitle(), sipEntity.getTitle());
+        assertEquals(SIP.getSummary(), sipEntity.getSummary());
+        assertEquals(SIP.getText(), sipEntity.getText());
+        assertEquals(SIP.getSourceUri(), sipEntity.getSourceUri());
+    }
 }

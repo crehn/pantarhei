@@ -10,13 +10,13 @@ import javax.ws.rs.core.Response.Status;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface MapToProblem {
-	/**
-	 * HTTP status code to map to
-	 */
-	Status status();
+    /**
+     * HTTP status code to map to
+     */
+    Status status();
 
-	/**
-	 * Human readable description of the problem type; SHOULD NOT change between invocations.
-	 */
-	String title();
+    /**
+     * Human readable description of the problem type; SHOULD NOT change between invocations.
+     */
+    String title();
 }

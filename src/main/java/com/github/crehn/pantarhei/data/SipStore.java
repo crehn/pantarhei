@@ -12,20 +12,20 @@ import com.github.t1.log.Logged;
 @Logged(level = INFO)
 public class SipStore {
 
-	@PersistenceContext
-	private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	public SipEntity getSipByGuid(UUID guid) {
-		try {
-			TypedQuery<SipEntity> query = entityManager.createNamedQuery(GET_SIP_BY_GUID, SipEntity.class);
-			query.setParameter("guid", guid);
-			return query.getSingleResult();
-		} catch (NoResultException e) {
-			throw new SipNotFoundException(guid, e);
-		}
-	}
+    public SipEntity getSipByGuid(UUID guid) {
+        try {
+            TypedQuery<SipEntity> query = entityManager.createNamedQuery(GET_SIP_BY_GUID, SipEntity.class);
+            query.setParameter("guid", guid);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            throw new SipNotFoundException(guid, e);
+        }
+    }
 
-	public void store(SipEntity sip) {
-		entityManager.merge(sip);
-	}
+    public void store(SipEntity sip) {
+        entityManager.merge(sip);
+    }
 }

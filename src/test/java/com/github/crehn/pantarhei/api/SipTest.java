@@ -9,19 +9,19 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class SipTest {
 
-	@Test(expected = NullPointerException.class)
-	public void shouldFailToConstructSipWithoutGuid() {
-		Sip.builder() //
-				.guid(null) //
-				.title("title") //
-				.build();
-	}
+    @Test(expected = NullPointerException.class)
+    public void shouldFailToConstructSipWithoutGuid() {
+        Sip.builder() //
+                .guid(null) //
+                .title("title") //
+                .build();
+    }
 
-	@Test(expected = NullPointerException.class)
-	public void shouldFailToConstructSipWithoutTitle() {
-		Sip.builder() //
-				.guid(UUID.randomUUID()) //
-				.title(null) //
-				.build();
-	}
+    @Test(expected = NullPointerException.class)
+    public void shouldFailToConstructSipWithoutTitle() {
+        Sip.builder() //
+                .guid(UUID.randomUUID()) //
+                .title(null) //
+                .build();
+    }
 }
