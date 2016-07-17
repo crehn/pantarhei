@@ -1,24 +1,31 @@
 package com.github.crehn.pantarhei.data;
 
-import java.util.*;
+import static com.github.crehn.pantarhei.data.SipEntity.GET_SIP_BY_GUID;
+import static com.github.t1.log.LogLevel.INFO;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.UUID;
 
-@Slf4j
+import javax.persistence.*;
+
+import com.github.t1.log.Logged;
+
+@Logged(level = INFO)
 public class SipStore {
 
-	private static Map<UUID, SipEntity> map = new HashMap<>();
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	public SipEntity getSipByGuid(UUID guid) {
-		log.info("get sip for guid [{}]", guid);
-		SipEntity result = map.get(guid);
-		if (result == null)
-			throw new SipNotFoundException(guid);
-		return result;
+		try {
+			TypedQuery<SipEntity> query = entityManager.createNamedQuery(GET_SIP_BY_GUID, SipEntity.class);
+			query.setParameter("guid", guid);
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			throw new SipNotFoundException(guid, e);
+		}
 	}
 
 	public void store(SipEntity sip) {
-		log.info("store sip {}", sip);
-		map.put(sip.getGuid(), sip);
+		entityManager.merge(sip);
 	}
 }

@@ -1,41 +1,46 @@
 package com.github.crehn.pantarhei.data;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import java.net.URI;
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
+@Table(name = "Sips")
 @Getter
 @Setter
 @Builder
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = PRIVATE)
+@NamedQuery(name = SipEntity.GET_SIP_BY_GUID, query = "SELECT s FROM SipEntity s WHERE s.guid = :guid")
 public class SipEntity {
+	public static final String GET_SIP_BY_GUID = "SipEntity.GET_BY_GUID";
+
+	public static class SipEntityBuilder {
+		public SipEntityBuilder sourceUri(URI sourceUri) {
+			this.sourceUri = sourceUri.toString();
+			return this;
+		}
+	}
 
 	@Id
-	@Column
 	private int id;
-
-	@Column
 	private UUID guid;
-	@Column
 	private String title;
-	@Column
 	private String summary;
-	@Column
 	private String text;
-	@Column
-	private URI sourceUri;
+	private String sourceUri;
+
+	public URI getSourceUri() {
+		return URI.create(sourceUri);
+	}
+
+	public void setSourceUri(URI sourceUri) {
+		this.sourceUri = sourceUri.toString();
+	}
 }

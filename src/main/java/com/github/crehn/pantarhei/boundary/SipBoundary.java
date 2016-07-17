@@ -1,17 +1,20 @@
 package com.github.crehn.pantarhei.boundary;
 
+import static com.github.t1.log.LogLevel.INFO;
+
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.*;
 
 import com.github.crehn.pantarhei.api.Sip;
 import com.github.crehn.pantarhei.control.SipFacade;
-import com.github.t1.log.LogLevel;
 import com.github.t1.log.Logged;
 
 @Path("/sips")
-@Logged(level = LogLevel.INFO)
+@Transactional
+@Logged(level = INFO)
 public class SipBoundary {
 
 	@Inject

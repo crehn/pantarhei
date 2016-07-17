@@ -13,6 +13,14 @@ public class SipNotFoundException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	public SipNotFoundException(UUID guid) {
-		super("No sip with guid [" + guid + "] found");
+		super(createMessage(guid));
+	}
+
+	public SipNotFoundException(UUID guid, Throwable cause) {
+		super(createMessage(guid), cause);
+	}
+
+	private static String createMessage(UUID guid) {
+		return "No sip with guid [" + guid + "] found";
 	}
 }
