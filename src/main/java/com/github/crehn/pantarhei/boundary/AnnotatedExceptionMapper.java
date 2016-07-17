@@ -6,13 +6,17 @@ import java.net.URI;
 import java.util.UUID;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Provider
 public class AnnotatedExceptionMapper implements ExceptionMapper<Exception> {
 	private static final String CONTENT_TYPE = "application/problem+json";
@@ -56,21 +60,35 @@ public class AnnotatedExceptionMapper implements ExceptionMapper<Exception> {
 	@Override
 	public Response toResponse(Exception exception) {
 		MapToProblem annotation = exception.getClass().getAnnotation(MapToProblem.class);
-		if (annotation != null)
-			return Response //
-			        .status(annotation.status()) //
-			        .type(CONTENT_TYPE) //
-			        .entity(toProblem(annotation, exception)) //
-			        .build();
-		else
-			return Response //
-			        .status(INTERNAL_SERVER_ERROR) //
-			        .type(CONTENT_TYPE) //
-			        .entity(defaultProblem(exception)) //
-			        .build();
+		if (annotation != null) {
+			Problem problem = toProblem(exception, annotation);
+			if (isClientProblem(annotation, exception))
+				log.debug("Mapping {} to {}; problem instance: {}", exception.getClass().getName(), annotation.status(),
+				        problem.getInstance());
+			else
+				log.warn("Mapping {} to {}; problem instance: {}", exception.getClass().getName(), annotation.status(),
+				        problem.getInstance());
+			return toResponse(annotation.status(), problem);
+		} else {
+			Problem problem = defaultProblem(exception);
+			log.error("Mapping unexpected exception to 500; problem instance: " + problem.getInstance(), exception);
+			return toResponse(INTERNAL_SERVER_ERROR, problem);
+		}
 	}
 
-	private Problem toProblem(MapToProblem annotation, Exception exception) {
+	private boolean isClientProblem(MapToProblem annotation, Exception exception) {
+		return annotation.status().getFamily() != Family.SERVER_ERROR;
+	}
+
+	private Response toResponse(Status status, Problem problem) {
+		return Response //
+		        .status(status) //
+		        .type(CONTENT_TYPE) //
+		        .entity(problem) //
+		        .build();
+	}
+
+	private Problem toProblem(Exception exception, MapToProblem annotation) {
 		return Problem.builder() //
 		        .type(URI.create(URN_PROBLEM_PREFIX + exception.getClass().getName())) //
 		        .title(annotation.title()) //
