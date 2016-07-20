@@ -15,7 +15,7 @@ import com.github.crehn.pantarhei.data.SipNotFoundException;
 public class SipGettingTest extends AbstractSipBoundaryTest {
 
     @Test(expected = SipNotFoundException.class)
-    public void shouldFailGettingUnknownSip() throws Exception {
+    public void shouldFailGettingUnknownSip() {
         givenUnknownSip();
 
         boundary.getSip(OTHER_GUID);
@@ -26,7 +26,7 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
     }
 
     @Test
-    public void shouldGetSip() throws Exception {
+    public void shouldGetSip() {
         givenSipEntity();
 
         Sip result = boundary.getSip(GUID);

@@ -62,7 +62,7 @@ public class AnnotatedExceptionMapper implements ExceptionMapper<Exception> {
         MapToProblem annotation = exception.getClass().getAnnotation(MapToProblem.class);
         if (annotation != null) {
             Problem problem = toProblem(exception, annotation);
-            if (isClientProblem(annotation, exception))
+            if (isClientProblem(annotation))
                 log.debug("Mapping {} to {}; problem instance: {}", exception.getClass().getName(), annotation.status(),
                         problem.getInstance());
             else
@@ -76,7 +76,7 @@ public class AnnotatedExceptionMapper implements ExceptionMapper<Exception> {
         }
     }
 
-    private boolean isClientProblem(MapToProblem annotation, Exception exception) {
+    private boolean isClientProblem(MapToProblem annotation) {
         return annotation.status().getFamily() != Family.SERVER_ERROR;
     }
 
