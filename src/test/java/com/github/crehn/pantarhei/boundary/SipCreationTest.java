@@ -73,7 +73,7 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
     }
 
     @Test
-    public void shouldStoreNewSipWithTagInDb() {
+    public void shouldStoreNewSipWithOneTagInDb() {
         givenTagEntity();
 
         boundary.putSip(GUID, SIP);
@@ -91,7 +91,7 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
     private void assertContainsBothTags(SipEntity sipEntity) {
         assertThat(sipEntity.getTags()) //
                 .extracting(TagEntity::getName) //
-                .containsExactly(TAG1, TAG2);
+                .containsExactlyInAnyOrder(TAG1, TAG2);
     }
 
     private void assertContainsTagFromDb(SipEntity sipEntity) {
@@ -114,5 +114,18 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
         boundary.putSip(GUID, sip);
 
         assertSipEntity(sip, sipEntity);
+    }
+
+    @Test
+    public void shouldReplaceSipTagInDb() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        Sip sip = SIP.withTags(asList(TAG3, TAG2));
+        boundary.putSip(GUID, sip);
+
+        assertThat(sipEntity.getTags()) //
+                .extracting(TagEntity::getName) //
+                .containsExactlyInAnyOrder(TAG2, TAG3);
     }
 }

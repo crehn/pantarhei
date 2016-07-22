@@ -58,6 +58,7 @@ public class SipFacade {
         entity.setSummary(sip.getSummary());
         entity.setText(sip.getText());
         entity.setSourceUri(sip.getSourceUri());
+        entity.setTags(getTagEntities(sip.getTags()));
     }
 
     private SipEntity toEntity(Sip sip) {

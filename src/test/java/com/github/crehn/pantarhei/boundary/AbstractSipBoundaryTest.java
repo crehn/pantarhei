@@ -22,7 +22,9 @@ public class AbstractSipBoundaryTest {
     protected static final URI SOURCE_URI = URI.create("http://exampole.com/foobar");
     protected static final String TAG1 = "tag1";
     protected static final String TAG2 = "tag2";
+    protected static final String TAG3 = "tag3";
     protected static final TagEntity TAG_ENTITY1 = new TagEntity(TAG1);
+    protected static final TagEntity TAG_ENTITY2 = new TagEntity(TAG2);
     protected static final Sip SIP = generateSip() //
             .tag(TAG1) //
             .tag(TAG2) //
@@ -46,7 +48,7 @@ public class AbstractSipBoundaryTest {
                 .text(TEXT) //
                 .sourceUri(SOURCE_URI) //
                 .tag(TAG_ENTITY1) //
-                .tag(new TagEntity(TAG2)) //
+                .tag(TAG_ENTITY2) //
                 .build();
     }
 
