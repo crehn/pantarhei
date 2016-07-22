@@ -24,9 +24,4 @@ public class TagStore {
         query.setParameter("names", tags);
         return query.getResultList();
     }
-
-    public void insert(TagEntity tag) {
-        entityManager.persist(tag);
-    }
-
 }

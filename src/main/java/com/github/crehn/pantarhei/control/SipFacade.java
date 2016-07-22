@@ -24,24 +24,7 @@ public class SipFacade {
         SipEntity sipEntity = sipStore.findSipByGuid(guid);
         if (sipEntity == null)
             throw new SipNotFoundException(guid);
-        return toSip(sipEntity);
-    }
-
-    private Sip toSip(SipEntity entity) {
-        return Sip.builder() //
-                .guid(entity.getGuid()) //
-                .title(entity.getTitle()) //
-                .summary(entity.getSummary()) //
-                .text(entity.getText()) //
-                .sourceUri(entity.getSourceUri()) //
-                .tags(toApi(entity.getTags())) //
-                .build();
-    }
-
-    private List<String> toApi(List<TagEntity> tags) {
-        return tags.stream() //
-                .map(TagEntity::getName) //
-                .collect(toList());
+        return sipEntity.toApi();
     }
 
     public void storeSip(Sip sip) {

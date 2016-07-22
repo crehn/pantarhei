@@ -1,6 +1,7 @@
 package com.github.crehn.pantarhei.data;
 
 import static com.github.crehn.pantarhei.data.SipEntity.GET_SIP_BY_GUID;
+import static java.util.stream.Collectors.toList;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static lombok.AccessLevel.PRIVATE;
@@ -9,6 +10,8 @@ import java.net.URI;
 import java.util.*;
 
 import javax.persistence.*;
+
+import com.github.crehn.pantarhei.api.Sip;
 
 import lombok.*;
 
@@ -56,4 +59,22 @@ public class SipEntity {
     public void setSourceUri(URI sourceUri) {
         this.sourceUri = sourceUri.toString();
     }
+
+    public Sip toApi() {
+        return Sip.builder() //
+                .guid(guid) //
+                .title(title) //
+                .summary(summary) //
+                .text(text) //
+                .sourceUri(getSourceUri()) //
+                .tags(toApi(tags)) //
+                .build();
+    }
+
+    private List<String> toApi(List<TagEntity> tags) {
+        return tags.stream() //
+                .map(TagEntity::getName) //
+                .collect(toList());
+    }
+
 }
