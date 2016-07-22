@@ -2,6 +2,7 @@ package com.github.crehn.pantarhei.data;
 
 import static com.github.crehn.pantarhei.data.TagEntity.FIND_TAGS_BY_NAMES;
 import static com.github.t1.log.LogLevel.INFO;
+import static java.util.Collections.emptyList;
 
 import java.util.List;
 
@@ -16,6 +17,9 @@ public class TagStore {
     private EntityManager entityManager;
 
     public List<TagEntity> findTagsByNames(List<String> tags) {
+        if (tags.isEmpty())
+            return emptyList();
+
         TypedQuery<TagEntity> query = entityManager.createNamedQuery(FIND_TAGS_BY_NAMES, TagEntity.class);
         query.setParameter("names", tags);
         return query.getResultList();
