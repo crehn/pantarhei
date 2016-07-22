@@ -1,11 +1,12 @@
 package com.github.crehn.pantarhei.data;
 
 import static com.github.crehn.pantarhei.data.SipEntity.GET_SIP_BY_GUID;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.net.URI;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -43,8 +44,10 @@ public class SipEntity {
     private String sourceUri;
 
     @Singular
-    @ManyToMany
-    private List<TagEntity> tags;
+    @ManyToMany(fetch = EAGER, cascade = ALL)
+    @JoinTable(joinColumns = { @JoinColumn(name = "sip_id") }, //
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") })
+    private List<TagEntity> tags = new ArrayList<>();
 
     public URI getSourceUri() {
         return URI.create(sourceUri);

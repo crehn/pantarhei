@@ -1,5 +1,7 @@
 package com.github.crehn.pantarhei.boundary;
 
+import static org.mockito.Mockito.when;
+
 import java.net.URI;
 import java.util.UUID;
 
@@ -9,14 +11,15 @@ import com.github.crehn.pantarhei.api.Sip;
 import com.github.crehn.pantarhei.api.Sip.SipBuilder;
 import com.github.crehn.pantarhei.control.SipFacade;
 import com.github.crehn.pantarhei.data.*;
+import com.github.crehn.pantarhei.tools.NumberGenerator;
 
 public class AbstractSipBoundaryTest {
     protected static final UUID GUID = UUID.randomUUID();
     protected static final UUID OTHER_GUID = UUID.randomUUID();
-    private static final String TITLE = "title";
-    private static final String SUMMARY = "summary";
-    private static final String TEXT = "text";
-    private static final URI SOURCE_URI = URI.create("http://exampole.com/foobar");
+    protected static final String TITLE = "title";
+    protected static final String SUMMARY = "summary";
+    protected static final String TEXT = "text";
+    protected static final URI SOURCE_URI = URI.create("http://exampole.com/foobar");
     protected static final String TAG1 = "tag1";
     protected static final String TAG2 = "tag2";
     protected static final TagEntity TAG_ENTITY1 = new TagEntity(TAG1);
@@ -24,6 +27,7 @@ public class AbstractSipBoundaryTest {
             .tag(TAG1) //
             .tag(TAG2) //
             .build();
+    protected static final Integer SIP_ENTITY_ID = NumberGenerator.nextInt();
 
     protected static SipBuilder generateSip() {
         return Sip.builder() //
@@ -35,6 +39,7 @@ public class AbstractSipBoundaryTest {
     }
 
     protected static final SipEntity SIP_ENTITY = SipEntity.builder() //
+            .id(SIP_ENTITY_ID) //
             .guid(GUID) //
             .title(TITLE) //
             .summary(SUMMARY) //
@@ -55,4 +60,8 @@ public class AbstractSipBoundaryTest {
     protected SipStore sipStore;
     @Mock
     protected TagStore tagStore;
+
+    protected void givenSipEntity() {
+        when(sipStore.findSipByGuid(GUID)).thenReturn(SIP_ENTITY);
+    }
 }

@@ -15,17 +15,17 @@ public class SipStore {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public SipEntity getSipByGuid(UUID guid) {
+    public SipEntity findSipByGuid(UUID guid) {
         try {
             TypedQuery<SipEntity> query = entityManager.createNamedQuery(GET_SIP_BY_GUID, SipEntity.class);
             query.setParameter("guid", guid);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            throw new SipNotFoundException(guid, e);
+            return null;
         }
     }
 
-    public void store(SipEntity sip) {
-        entityManager.merge(sip);
+    public void insert(SipEntity sip) {
+        entityManager.persist(sip);
     }
 }

@@ -22,7 +22,7 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
     }
 
     private void givenUnknownSip() {
-        when(sipStore.getSipByGuid(OTHER_GUID)).thenThrow(new SipNotFoundException(OTHER_GUID));
+        when(sipStore.findSipByGuid(OTHER_GUID)).thenReturn(null);
     }
 
     @Test
@@ -32,10 +32,6 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
         Sip result = boundary.getSip(GUID);
 
         assertSip(result);
-    }
-
-    private void givenSipEntity() {
-        when(sipStore.getSipByGuid(GUID)).thenReturn(SIP_ENTITY);
     }
 
     private void assertSip(Sip result) {

@@ -1,5 +1,6 @@
 package com.github.crehn.pantarhei.control;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.*;
@@ -20,7 +21,9 @@ public class SipFacade {
     private TagStore tagStore;
 
     public Sip getSip(UUID guid) {
-        SipEntity sipEntity = sipStore.getSipByGuid(guid);
+        SipEntity sipEntity = sipStore.findSipByGuid(guid);
+        if (sipEntity == null)
+            throw new SipNotFoundException(guid);
         return toSip(sipEntity);
     }
 
@@ -42,7 +45,21 @@ public class SipFacade {
     }
 
     public void storeSip(Sip sip) {
-        sipStore.store(toEntity(sip));
+        SipEntity sipFromDb = sipStore.findSipByGuid(sip.getGuid());
+        if (sipFromDb == null) {
+            SipEntity sipEntity = toEntity(sip);
+            sipStore.insert(sipEntity);
+            sipEntity.setTags(getTagEntities(sip.getTags()));
+        } else {
+            replaceData(sipFromDb, sip);
+        }
+    }
+
+    private void replaceData(SipEntity entity, Sip sip) {
+        entity.setTitle(sip.getTitle());
+        entity.setSummary(sip.getSummary());
+        entity.setText(sip.getText());
+        entity.setSourceUri(sip.getSourceUri());
     }
 
     private SipEntity toEntity(Sip sip) {
@@ -52,11 +69,13 @@ public class SipFacade {
                 .summary(sip.getSummary()) //
                 .text(sip.getText()) //
                 .sourceUri(sip.getSourceUri()) //
-                .tags(getTagEntities(sip.getTags())) //
                 .build();
     }
 
     private List<TagEntity> getTagEntities(List<String> tags) {
+        if (tags == null)
+            return emptyList();
+
         List<TagEntity> tagsInDb = tagStore.findTagsByNames(tags);
         List<String> alreadyFoundEntities = tagsInDb.stream() //
                 .map(TagEntity::getName) //
@@ -68,6 +87,7 @@ public class SipFacade {
                 .map(TagEntity::new) //
                 .collect(toList());
         log.debug("create new tags: {}", newlyCreatedTags);
+        newlyCreatedTags.stream().forEach(tag -> tagStore.insert(tag));
 
         List<TagEntity> result = new ArrayList<>();
         result.addAll(tagsInDb);
