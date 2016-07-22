@@ -82,17 +82,6 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
         assertNewSipEntity(sipEntity);
         assertContainsBothTags(sipEntity);
         assertContainsTagFromDb(sipEntity);
-        assertNewTag();
-    }
-
-    private void assertNewTag() {
-        TagEntity tagEntity = captureTagEntity();
-        assertEquals(TAG2, tagEntity.getName());
-    }
-
-    private TagEntity captureTagEntity() {
-        verify(tagStore).insert(tagEntityCaptor.capture());
-        return tagEntityCaptor.getValue();
     }
 
     private void givenTagEntity() {

@@ -47,9 +47,7 @@ public class SipFacade {
     public void storeSip(Sip sip) {
         SipEntity sipFromDb = sipStore.findSipByGuid(sip.getGuid());
         if (sipFromDb == null) {
-            SipEntity sipEntity = toEntity(sip);
-            sipStore.insert(sipEntity);
-            sipEntity.setTags(getTagEntities(sip.getTags()));
+            sipStore.insert(toEntity(sip));
         } else {
             replaceData(sipFromDb, sip);
         }
@@ -69,6 +67,7 @@ public class SipFacade {
                 .summary(sip.getSummary()) //
                 .text(sip.getText()) //
                 .sourceUri(sip.getSourceUri()) //
+                .tags(getTagEntities(sip.getTags())) //
                 .build();
     }
 
@@ -87,7 +86,6 @@ public class SipFacade {
                 .map(TagEntity::new) //
                 .collect(toList());
         log.debug("create new tags: {}", newlyCreatedTags);
-        newlyCreatedTags.stream().forEach(tag -> tagStore.insert(tag));
 
         List<TagEntity> result = new ArrayList<>();
         result.addAll(tagsInDb);
