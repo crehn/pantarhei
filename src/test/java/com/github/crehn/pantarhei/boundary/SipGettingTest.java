@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.github.crehn.pantarhei.api.Sip;
+import com.github.crehn.pantarhei.data.SipEntity;
 import com.github.crehn.pantarhei.data.SipNotFoundException;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,19 +28,20 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
 
     @Test
     public void shouldGetSip() {
-        givenSipEntity();
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
 
         Sip result = boundary.getSip(GUID);
 
-        assertSip(result);
+        assertSip(sipEntity, result);
     }
 
-    private void assertSip(Sip result) {
-        assertEquals(SIP_ENTITY.getGuid(), result.getGuid());
-        assertEquals(SIP_ENTITY.getTitle(), result.getTitle());
-        assertEquals(SIP_ENTITY.getSummary(), result.getSummary());
-        assertEquals(SIP_ENTITY.getText(), result.getText());
-        assertEquals(SIP_ENTITY.getSourceUri(), result.getSourceUri());
+    private void assertSip(SipEntity sipEntity, Sip result) {
+        assertEquals(sipEntity.getGuid(), result.getGuid());
+        assertEquals(sipEntity.getTitle(), result.getTitle());
+        assertEquals(sipEntity.getSummary(), result.getSummary());
+        assertEquals(sipEntity.getText(), result.getText());
+        assertEquals(sipEntity.getSourceUri(), result.getSourceUri());
         assertThat(result.getTags()).containsExactly(TAG1, TAG2);
     }
 }

@@ -27,7 +27,6 @@ public class AbstractSipBoundaryTest {
             .tag(TAG1) //
             .tag(TAG2) //
             .build();
-    protected static final Integer SIP_ENTITY_ID = NumberGenerator.nextInt();
 
     protected static SipBuilder generateSip() {
         return Sip.builder() //
@@ -38,16 +37,18 @@ public class AbstractSipBoundaryTest {
                 .sourceUri(SOURCE_URI);
     }
 
-    protected static final SipEntity SIP_ENTITY = SipEntity.builder() //
-            .id(SIP_ENTITY_ID) //
-            .guid(GUID) //
-            .title(TITLE) //
-            .summary(SUMMARY) //
-            .text(TEXT) //
-            .sourceUri(SOURCE_URI) //
-            .tag(TAG_ENTITY1) //
-            .tag(new TagEntity(TAG2)) //
-            .build();
+    protected static SipEntity createSipEntity() {
+        return SipEntity.builder() //
+                .id(NumberGenerator.nextInt()) //
+                .guid(GUID) //
+                .title(TITLE) //
+                .summary(SUMMARY) //
+                .text(TEXT) //
+                .sourceUri(SOURCE_URI) //
+                .tag(TAG_ENTITY1) //
+                .tag(new TagEntity(TAG2)) //
+                .build();
+    }
 
     @InjectMocks
     protected SipBoundary boundary;
@@ -61,7 +62,7 @@ public class AbstractSipBoundaryTest {
     @Mock
     protected TagStore tagStore;
 
-    protected void givenSipEntity() {
-        when(sipStore.findSipByGuid(GUID)).thenReturn(SIP_ENTITY);
+    protected void givenSipEntity(SipEntity sipEntity) {
+        when(sipStore.findSipByGuid(GUID)).thenReturn(sipEntity);
     }
 }

@@ -101,7 +101,8 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
 
     @Test
     public void shouldReplaceSipInDb() {
-        givenSipEntity();
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
 
         Sip sip = Sip.builder() //
                 .guid(GUID) //
@@ -112,8 +113,6 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
                 .build();
         boundary.putSip(GUID, sip);
 
-        SipEntity sipEntity = SIP_ENTITY; // TODO: ensure test isolation
-        assertEquals(SIP_ENTITY_ID, sipEntity.getId());
         assertSipEntity(sip, sipEntity);
     }
 }
