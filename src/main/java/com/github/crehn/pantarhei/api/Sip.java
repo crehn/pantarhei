@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.*;
 import lombok.experimental.Wither;
 
@@ -21,8 +22,11 @@ public class Sip {
     @NonNull
     private UUID guid;
     @NonNull
+    @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
     private String title;
+    @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
     private String summary;
+    @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
     private String text;
     private URI sourceUri;
     @Singular

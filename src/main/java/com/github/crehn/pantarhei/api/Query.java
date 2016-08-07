@@ -11,16 +11,16 @@ public class Query {
     private static final String JPQL_QUERY = "SELECT s from SipEntity s WHERE ";
 
     @RequiredArgsConstructor
-    private static class Tokenizer implements Iterable<Token> {
+    private static class Tokenizer implements Iterable<Token> { // NOPMD
         protected static final String WHITESPACE = " \r\n\t";
         protected static final String DELIMITERS = WHITESPACE + "()";
-        private int index = 0;
+        private int index = 0; // NOPMD
 
         @NonNull
         private String queryString;
 
         @Override
-        public Iterator<Token> iterator() {
+        public Iterator<Token> iterator() { // NOPMD
             return new Iterator<Token>() {
                 @Override
                 public boolean hasNext() {
@@ -44,11 +44,11 @@ public class Query {
                 }
 
                 private boolean isWhiteSpace(char c) {
-                    return WHITESPACE.contains("" + c);
+                    return WHITESPACE.contains(Character.toString(c));
                 }
 
                 private boolean isDelimiter(char c) {
-                    return DELIMITERS.contains("" + c);
+                    return DELIMITERS.contains(Character.toString(c));
                 }
 
                 private Token toToken(String string) {
