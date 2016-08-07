@@ -7,6 +7,7 @@ import java.util.*;
 
 import javax.inject.Inject;
 
+import com.github.crehn.pantarhei.api.Query;
 import com.github.crehn.pantarhei.api.Sip;
 import com.github.crehn.pantarhei.data.*;
 
@@ -75,5 +76,9 @@ public class SipFacade {
         result.addAll(tagsInDb);
         result.addAll(newlyCreatedTags);
         return result;
+    }
+
+    public List<Sip> querySips(Query query) {
+        return sipStore.findSipsByJpql(query.toJpql());
     }
 }

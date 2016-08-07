@@ -3,10 +3,12 @@ package com.github.crehn.pantarhei.data;
 import static com.github.crehn.pantarhei.data.SipEntity.GET_SIP_BY_GUID;
 import static com.github.t1.log.LogLevel.INFO;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.*;
 
+import com.github.crehn.pantarhei.api.Sip;
 import com.github.t1.log.Logged;
 
 @Logged(level = INFO)
@@ -27,5 +29,10 @@ public class SipStore {
 
     public void insert(SipEntity sip) {
         entityManager.persist(sip);
+    }
+
+    public List<Sip> findSipsByJpql(String jpql) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -2,18 +2,24 @@ package com.github.crehn.pantarhei.boundary;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.github.crehn.pantarhei.api.Query;
 import com.github.crehn.pantarhei.api.Sip;
 import com.github.crehn.pantarhei.data.SipEntity;
 import com.github.crehn.pantarhei.data.SipNotFoundException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SipGettingTest extends AbstractSipBoundaryTest {
+    @Captor
+    ArgumentCaptor<String> jpqlCaptor;
 
     @Test(expected = SipNotFoundException.class)
     public void shouldFailGettingUnknownSip() {
@@ -43,5 +49,49 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
         assertEquals(sipEntity.getText(), result.getText());
         assertEquals(sipEntity.getSourceUri(), result.getSourceUri());
         assertThat(result.getTags()).containsExactly(TAG1, TAG2);
+    }
+
+    @Test(expected = MissingQueryException.class)
+    public void shouldFailQueryingSipsWithoutQuery() {
+        boundary.querySips(null);
+    }
+
+    @Test
+    public void shouldQuerySipsByOneTag() {
+        boundary.querySips(new Query("+" + TAG1));
+
+        assertEquals("SELECT s from SipEntity s " //
+                + "WHERE 'tag1' MEMBER OF s.tags", captureJpql());
+    }
+
+    private String captureJpql() {
+        verify(sipStore).findSipsByJpql(jpqlCaptor.capture());
+        return jpqlCaptor.getValue();
+    }
+
+    @Test
+    public void shouldQuerySipsByOneTagWithWhiteSpace() {
+        boundary.querySips(new Query("  \t\r\n+" + TAG1 + "\t\n\r     "));
+
+        assertEquals("SELECT s from SipEntity s " //
+                + "WHERE 'tag1' MEMBER OF s.tags", captureJpql());
+    }
+
+    @Test
+    public void shouldQuerySipsByTwoTags() {
+        boundary.querySips(new Query("+" + TAG1 + " +" + TAG2));
+
+        assertEquals("SELECT s from SipEntity s " //
+                + "WHERE 'tag1' MEMBER OF s.tags " //
+                + "AND 'tag2' MEMBER OF s.tags", captureJpql());
+    }
+
+    @Test
+    public void shouldQuerySipsByTwoTagsAndAdditionalWhiteSpace() {
+        boundary.querySips(new Query("+" + TAG1 + "   \r\n\t   +" + TAG2));
+
+        assertEquals("SELECT s from SipEntity s " //
+                + "WHERE 'tag1' MEMBER OF s.tags " //
+                + "AND 'tag2' MEMBER OF s.tags", captureJpql());
     }
 }
