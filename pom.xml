@@ -42,13 +42,6 @@
             <url>https://api.bintray.com/maven/crehn/maven/pantarhei/;publish=1</url>
         </repository>
     </distributionManagement>
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>bintray</name>
-            <url>http://jcenter.bintray.com</url>
-        </repository>
-    </repositories>
 
     <dependencyManagement>
         <dependencies>
