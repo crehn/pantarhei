@@ -11,8 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.github.crehn.pantarhei.api.Query;
-import com.github.crehn.pantarhei.api.Sip;
+import com.github.crehn.pantarhei.api.*;
 import com.github.crehn.pantarhei.data.SipEntity;
 import com.github.crehn.pantarhei.data.SipNotFoundException;
 
@@ -56,6 +55,13 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
         boundary.querySips(null);
     }
 
+    @Test(expected = QuerySyntaxException.class)
+    public void shouldFailQueryingSipsWithoutPrefix() {
+        boundary.querySips(new Query(TAG1));
+        assertEquals("SELECT s from SipEntity s " //
+                + "WHERE 'tag1' NOT MEMBER OF s.tags", captureJpql());
+    }
+
     @Test
     public void shouldQuerySipsByOneTag() {
         boundary.querySips(new Query("+" + TAG1));
@@ -93,5 +99,13 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
         assertEquals("SELECT s from SipEntity s " //
                 + "WHERE 'tag1' MEMBER OF s.tags " //
                 + "AND 'tag2' MEMBER OF s.tags", captureJpql());
+    }
+
+    @Test
+    public void shouldQuerySipsByExcludingTag() {
+        boundary.querySips(new Query("-" + TAG1));
+
+        assertEquals("SELECT s from SipEntity s " //
+                + "WHERE 'tag1' NOT MEMBER OF s.tags", captureJpql());
     }
 }

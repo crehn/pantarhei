@@ -52,7 +52,14 @@ public class Query {
                 }
 
                 private Token toToken(String string) {
-                    return new Token(TokenType.includingTag, string.substring(1));
+                    switch (string.charAt(0)) {
+                    case '+':
+                        return new Token(TokenType.includingTag, string.substring(1));
+                    case '-':
+                        return new Token(TokenType.excludingTag, string.substring(1));
+                    }
+                    throw new QuerySyntaxException("Expected '+' or '-' but found " + string);
+
                 }
             };
         }
@@ -68,11 +75,14 @@ public class Query {
         }
     }
 
+    @AllArgsConstructor
     private enum TokenType {
-        includingTag;
+        includingTag("'%s' MEMBER OF s.tags"), excludingTag("'%s' NOT MEMBER OF s.tags");
+
+        String template;
 
         public String toJpql(String value) {
-            return "'" + value + "' MEMBER OF s.tags";
+            return String.format(template, value);
         }
     }
 
