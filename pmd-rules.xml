@@ -19,6 +19,8 @@
         <exclude name="ConfusingTernary"/>
         <exclude name="FieldDeclarationsShouldBeAtStartOfClass"/>
         <exclude name="ImmutableField"/>
+        <exclude name="TooFewBranchesForASwitchStatement"/>
+        <exclude name="SwitchStmtsShouldHaveDefault"/>
     </rule>
     <rule ref="rulesets/java/empty.xml" />
     <rule ref="rulesets/java/finalizers.xml" />
