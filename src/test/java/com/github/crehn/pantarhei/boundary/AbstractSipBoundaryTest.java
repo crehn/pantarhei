@@ -1,5 +1,6 @@
 package com.github.crehn.pantarhei.boundary;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
@@ -63,8 +64,15 @@ public class AbstractSipBoundaryTest {
     protected SipStore sipStore;
     @Mock
     protected TagStore tagStore;
+    @Captor
+    protected ArgumentCaptor<String> jpqlCaptor;
 
     protected void givenSipEntity(SipEntity sipEntity) {
         when(sipStore.findSipByGuid(GUID)).thenReturn(sipEntity);
+    }
+
+    protected String captureJpql() {
+        verify(sipStore).findSipsByJpql(jpqlCaptor.capture());
+        return jpqlCaptor.getValue();
     }
 }

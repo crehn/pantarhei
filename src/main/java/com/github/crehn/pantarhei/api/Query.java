@@ -5,6 +5,18 @@ import java.util.Iterator;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Grammar:
+ *
+ * <pre>
+ * <code>
+ * QUERY ::= { INCLUDING_TAG | XCLUDING_TAG }
+ * INCLUDING_TAG ::= '+' + TAGNAME
+ * EXCLUDING_TAG ::= '-' + TAGNAME
+ * TAGNAME ::= { ?Letter? | ?Number? | '-' }
+ * </code>
+ * </pre>
+ */
 @Slf4j
 @Value
 public class Query {
@@ -12,8 +24,6 @@ public class Query {
 
     @RequiredArgsConstructor
     private static class Tokenizer implements Iterable<Token> { // NOPMD
-        protected static final String WHITESPACE = " \r\n\t";
-        protected static final String DELIMITERS = WHITESPACE + "()";
         private int index = 0; // NOPMD
 
         @NonNull
@@ -32,10 +42,12 @@ public class Query {
                     StringBuilder result = new StringBuilder();
                     for (; index < queryString.length(); index++) {
                         char c = queryString.charAt(index);
-                        if (isWhiteSpace(c))
+                        if (Character.isWhitespace(c))
                             index++;
-                        else
+                        else if (Character.isLetter(c) || Character.isDigit(c) || c == '+' || c == '-')
                             result.append(c);
+                        else
+                            throw new QuerySyntaxException("Illegal character [" + c + "] at position " + index);
 
                         if (isDelimiter(c) && result.length() > 0)
                             return toToken(result.toString());
@@ -43,12 +55,8 @@ public class Query {
                     return toToken(result.toString());
                 }
 
-                private boolean isWhiteSpace(char c) {
-                    return WHITESPACE.contains(Character.toString(c));
-                }
-
                 private boolean isDelimiter(char c) {
-                    return DELIMITERS.contains(Character.toString(c));
+                    return Character.isWhitespace(c) || c == '(' || c == ')';
                 }
 
                 private Token toToken(String string) {
@@ -58,7 +66,7 @@ public class Query {
                     case '-':
                         return new Token(TokenType.excludingTag, string.substring(1));
                     }
-                    throw new QuerySyntaxException("Expected '+' or '-' but found " + string);
+                    throw new QuerySyntaxException("Expected '+' or '-' but found [" + string + "] at " + index);
 
                 }
             };
@@ -77,7 +85,8 @@ public class Query {
 
     @AllArgsConstructor
     private enum TokenType {
-        includingTag("'%s' MEMBER OF s.tags"), excludingTag("'%s' NOT MEMBER OF s.tags");
+        includingTag("'%s' MEMBER OF s.tags"), //
+        excludingTag("'%s' NOT MEMBER OF s.tags");
 
         String template;
 
