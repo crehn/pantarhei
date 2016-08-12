@@ -22,7 +22,7 @@ public class TagEntity {
     private Integer id;
 
     @Version
-    private int version;
+    private Integer version;
 
     @NonNull
     private String name;

@@ -29,7 +29,7 @@ public class SipEntity {
 
     public static class SipEntityBuilder {
         public SipEntityBuilder sourceUri(URI sourceUri) {
-            this.sourceUri = sourceUri.toString();
+            this.sourceUri = sourceUri == null ? null : sourceUri.toString();
             return this;
         }
     }
@@ -38,7 +38,7 @@ public class SipEntity {
     @GeneratedValue
     private Integer id;
     @Version
-    private int version;
+    private Integer version;
 
     private UUID guid;
     private String title;
@@ -53,7 +53,7 @@ public class SipEntity {
     private List<TagEntity> tags = new ArrayList<>();
 
     public URI getSourceUri() {
-        return URI.create(sourceUri);
+        return sourceUri == null ? null : URI.create(sourceUri);
     }
 
     public void setSourceUri(URI sourceUri) {
