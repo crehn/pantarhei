@@ -37,6 +37,11 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
     }
 
     @Test
+    public void shouldNotThrowWhenStoringNewSipWithoutSourceUri() {
+        boundary.putSip(GUID, SIP.withSourceUri(null));
+    }
+
+    @Test
     public void shouldStoreNewSipWithoutTags() {
         boundary.putSip(GUID, SIP.withTags(null));
 

@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.json.JsonObject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 
 import com.github.crehn.pantarhei.api.Query;
 import com.github.crehn.pantarhei.api.Sip;
 import com.github.crehn.pantarhei.control.SipFacade;
+import com.github.crehn.pantarhei.control.UnknownPropertyException;
 import com.github.t1.log.Logged;
 
 @Path("/sips")
@@ -34,9 +36,19 @@ public class SipBoundary {
         if (sip.getGuid() == null)
             sip.setGuid(guid);
         if (!guid.equals(sip.getGuid()))
-            throw new IllegalArgumentException("guid in path must match guid in sip");
+            throw new IllegalArgumentException(
+                    "guid in path must match guid in sip. You don't need to specify it in the sip anyway.");
 
         facade.putSip(sip);
+    }
+
+    @PATCH
+    @Path("/{guid}")
+    public void patchSip(@PathParam("guid") UUID guid, JsonObject patch) {
+        if (patch.containsKey("guid"))
+            throw new UnknownPropertyException("guid may not be changed");
+
+        facade.patchSip(guid, patch);
     }
 
     @DELETE

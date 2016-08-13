@@ -6,14 +6,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
+import java.util.UUID;
+
+import javax.json.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.github.crehn.pantarhei.api.Sip;
-import com.github.crehn.pantarhei.data.SipEntity;
-import com.github.crehn.pantarhei.data.TagEntity;
+import com.github.crehn.pantarhei.control.UnknownPropertyException;
+import com.github.crehn.pantarhei.data.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SipUpdateTest extends AbstractSipBoundaryTest {
@@ -61,6 +64,103 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
 
         Sip sip = SIP.withTags(asList(TAG3, TAG2));
         boundary.putSip(GUID, sip);
+
+        assertThat(sipEntity.getTags()) //
+                .extracting(TagEntity::getName) //
+                .containsExactlyInAnyOrder(TAG2, TAG3);
+    }
+
+    @Test
+    public void shouldPatchSipInDbChangingNothing() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        JsonObject patch = Json.createObjectBuilder().build();
+        boundary.patchSip(GUID, patch);
+
+        assertSipEntity(SIP, sipEntity);
+    }
+
+    @Test(expected = SipNotFoundException.class)
+    public void shouldFailToPatchUnknownSip() {
+        JsonObject patch = Json.createObjectBuilder().build();
+        boundary.patchSip(OTHER_GUID, patch);
+    }
+
+    @Test(expected = UnknownPropertyException.class)
+    public void shouldFailToPatchSipWithUnknownProperty() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        JsonObject patch = Json.createObjectBuilder() //
+                .add("unknown", "value") //
+                .build();
+        boundary.patchSip(GUID, patch);
+    }
+
+    @Test(expected = UnknownPropertyException.class)
+    public void shouldFailToPatchSipWithGuid() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        JsonObject patch = Json.createObjectBuilder() //
+                .add("guid", UUID.randomUUID().toString()) //
+                .build();
+        boundary.patchSip(GUID, patch);
+    }
+
+    @Test
+    public void shouldPatchSipInDbDeletingValue() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        JsonObject patch = Json.createObjectBuilder() //
+                .add("text", JsonValue.NULL) //
+                .build();
+        boundary.patchSip(GUID, patch);
+
+        assertSipEntity(SIP.withText(null), sipEntity);
+    }
+
+    @Test
+    public void shouldPatchSipInDbChangingStringValue() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        JsonObject patch = Json.createObjectBuilder() //
+                .add("title", TITLE + "2") //
+                .build();
+        boundary.patchSip(GUID, patch);
+
+        assertSipEntity(SIP.withTitle(TITLE + "2"), sipEntity);
+    }
+
+    @Test
+    public void shouldPatchSipInDbChangingUriValue() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        JsonObject patch = Json.createObjectBuilder() //
+                .add("sourceUri", SOURCE_URI + "2") //
+                .build();
+        boundary.patchSip(GUID, patch);
+
+        assertSipEntity(SIP.withSourceUri(URI.create(SOURCE_URI.toString() + "2")), sipEntity);
+    }
+
+    @Test
+    public void shouldPatchSipInDbChangingTags() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        JsonObject patch = Json.createObjectBuilder() //
+                .add("tags",
+                        Json.createArrayBuilder() //
+                                .add(TAG3) //
+                                .add(TAG2) //
+                                .build()) //
+                .build();
+        boundary.patchSip(GUID, patch);
 
         assertThat(sipEntity.getTags()) //
                 .extracting(TagEntity::getName) //

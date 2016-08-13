@@ -101,7 +101,7 @@
         <dependency>
             <groupId>com.github.crehn</groupId>
             <artifactId>list-query</artifactId>
-            <version>1.0.2</version>
+            <version>1.1.0</version>
         </dependency>
 
         <!-- test dependencies -->
@@ -127,6 +127,12 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.1.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.0.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
