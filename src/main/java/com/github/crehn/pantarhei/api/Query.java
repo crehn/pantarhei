@@ -2,6 +2,8 @@ package com.github.crehn.pantarhei.api;
 
 import java.util.Iterator;
 
+import com.github.crehn.pantarhei.boundary.MissingQueryException;
+
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -97,6 +99,13 @@ public class Query {
 
     String queryString;
 
+    public Query(String queryString) {
+        this.queryString = queryString.trim();
+
+        if ("".equals(this.queryString))
+            throw new MissingQueryException();
+    }
+
     @Override
     public String toString() {
         return queryString;
@@ -104,7 +113,7 @@ public class Query {
 
     public String toJpql() {
         StringBuilder result = new StringBuilder(JPQL_QUERY);
-        Tokenizer tokenizer = new Tokenizer(queryString.trim());
+        Tokenizer tokenizer = new Tokenizer(queryString);
         boolean firstToken = true;
         for (Token token : tokenizer) {
             log.debug("found token [{}]", token);

@@ -83,4 +83,8 @@ public class SipFacade {
         List<SipEntity> sipEntities = sipStore.findSipsByJpql(query.toJpql());
         return map(sipEntities, SipEntity::toApi);
     }
+
+    public void deleteSip(UUID guid) {
+        sipStore.deleteSip(guid);
+    }
 }

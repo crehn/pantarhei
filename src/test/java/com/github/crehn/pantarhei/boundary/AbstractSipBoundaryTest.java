@@ -1,5 +1,6 @@
 package com.github.crehn.pantarhei.boundary;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,5 +75,13 @@ public class AbstractSipBoundaryTest {
     protected String captureJpql() {
         verify(sipStore).findSipsByJpql(jpqlCaptor.capture());
         return jpqlCaptor.getValue();
+    }
+
+    protected void assertSipEntity(Sip expected, SipEntity sipEntity) {
+        assertEquals(expected.getGuid(), sipEntity.getGuid());
+        assertEquals(expected.getTitle(), sipEntity.getTitle());
+        assertEquals(expected.getSummary(), sipEntity.getSummary());
+        assertEquals(expected.getText(), sipEntity.getText());
+        assertEquals(expected.getSourceUri(), sipEntity.getSourceUri());
     }
 }

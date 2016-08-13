@@ -39,6 +39,13 @@ public class SipBoundary {
         facade.putSip(sip);
     }
 
+    @DELETE
+    @Path("/{guid}")
+    public void deleteSip(@PathParam("guid") UUID guid) {
+        facade.deleteSip(guid);
+    }
+
+
     @GET
     public List<Sip> querySips(@QueryParam("q") Query query) {
         if (query == null)

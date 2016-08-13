@@ -1,5 +1,6 @@
 package com.github.crehn.pantarhei.data;
 
+import static com.github.crehn.pantarhei.data.SipEntity.DELETE_SIP_BY_GUID;
 import static com.github.crehn.pantarhei.data.SipEntity.GET_SIP_BY_GUID;
 import static java.util.stream.Collectors.toList;
 import static javax.persistence.CascadeType.ALL;
@@ -23,9 +24,12 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = PRIVATE)
-@NamedQuery(name = GET_SIP_BY_GUID, query = "SELECT s FROM SipEntity s WHERE s.guid = :guid")
+@NamedQueries({ //
+        @NamedQuery(name = GET_SIP_BY_GUID, query = "SELECT s FROM SipEntity s WHERE s.guid = :guid"),
+        @NamedQuery(name = DELETE_SIP_BY_GUID, query = "DELETE FROM SipEntity s WHERE s.guid = :guid") })
 public class SipEntity {
     public static final String GET_SIP_BY_GUID = "SipEntity.GET_BY_GUID";
+    public static final String DELETE_SIP_BY_GUID = "SipEntity.DELETE_BY_GUID";
 
     public static class SipEntityBuilder {
         public SipEntityBuilder sourceUri(URI sourceUri) {
