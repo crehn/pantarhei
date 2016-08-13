@@ -1,5 +1,6 @@
 package com.github.crehn.pantarhei.control;
 
+import static com.github.crehn.listquery.Just.map;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
@@ -79,6 +80,7 @@ public class SipFacade {
     }
 
     public List<Sip> querySips(Query query) {
-        return sipStore.findSipsByJpql(query.toJpql());
+        List<SipEntity> sipEntities = sipStore.findSipsByJpql(query.toJpql());
+        return map(sipEntities, SipEntity::toApi);
     }
 }

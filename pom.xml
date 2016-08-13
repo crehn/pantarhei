@@ -98,6 +98,11 @@
             <artifactId>logging-interceptor</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.crehn</groupId>
+            <artifactId>list-query</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 
         <!-- test dependencies -->
         <dependency>

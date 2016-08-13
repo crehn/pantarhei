@@ -85,8 +85,8 @@ public class Query {
 
     @AllArgsConstructor
     private enum TokenType {
-        includingTag("'%s' MEMBER OF s.tags"), //
-        excludingTag("'%s' NOT MEMBER OF s.tags");
+        includingTag("(SELECT t FROM TagEntity t WHERE t.name = '%s') IN elements(s.tags)"), //
+        excludingTag("(SELECT t FROM TagEntity t WHERE t.name = '%s') NOT IN elements(s.tags)");
 
         String template;
 

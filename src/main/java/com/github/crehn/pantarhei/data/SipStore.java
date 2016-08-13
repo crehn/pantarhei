@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import javax.persistence.*;
 
-import com.github.crehn.pantarhei.api.Sip;
 import com.github.t1.log.Logged;
 
 @Logged(level = INFO)
@@ -31,8 +30,8 @@ public class SipStore {
         entityManager.persist(sip);
     }
 
-    public List<Sip> findSipsByJpql(String jpql) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<SipEntity> findSipsByJpql(String jpql) {
+        TypedQuery<SipEntity> query = entityManager.createQuery(jpql, SipEntity.class);
+        return query.getResultList();
     }
 }
