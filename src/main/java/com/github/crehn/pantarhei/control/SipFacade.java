@@ -29,7 +29,7 @@ public class SipFacade {
         return sipEntity.toApi();
     }
 
-    public void storeSip(Sip sip) {
+    public void putSip(Sip sip) {
         SipEntity sipFromDb = sipStore.findSipByGuid(sip.getGuid());
         if (sipFromDb == null) {
             sipStore.insert(toEntity(sip));

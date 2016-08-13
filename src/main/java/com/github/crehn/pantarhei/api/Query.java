@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Value
 public class Query {
-    private static final String JPQL_QUERY = "SELECT s from SipEntity s WHERE ";
+    private static final String JPQL_QUERY = "SELECT s FROM SipEntity s WHERE ";
 
     @RequiredArgsConstructor
     private static class Tokenizer implements Iterable<Token> { // NOPMD
@@ -85,8 +85,8 @@ public class Query {
 
     @AllArgsConstructor
     private enum TokenType {
-        includingTag("(SELECT t FROM TagEntity t WHERE t.name = '%s') IN elements(s.tags)"), //
-        excludingTag("(SELECT t FROM TagEntity t WHERE t.name = '%s') NOT IN elements(s.tags)");
+        includingTag("(SELECT t FROM TagEntity t WHERE t.name = '%s') MEMBER OF s.tags"), //
+        excludingTag("(SELECT t FROM TagEntity t WHERE t.name = '%s') NOT MEMBER OF s.tags");
 
         String template;
 

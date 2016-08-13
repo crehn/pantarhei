@@ -53,7 +53,7 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
     @Test(expected = QuerySyntaxException.class)
     public void shouldFailQueryingSipsWithoutPrefix() {
         boundary.querySips(new Query(TAG1));
-        assertEquals("SELECT s from SipEntity s " //
+        assertEquals("SELECT s FROM SipEntity s " //
                 + "WHERE 'tag1' NOT MEMBER OF s.tags", captureJpql());
     }
 
@@ -61,41 +61,43 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
     public void shouldQuerySipsByOneTag() {
         boundary.querySips(new Query("+" + TAG1));
 
-        assertEquals("SELECT s from SipEntity s " //
-                + "WHERE 'tag1' MEMBER OF s.tags", captureJpql());
+        assertEquals("SELECT s FROM SipEntity s " //
+                + "WHERE (SELECT t FROM TagEntity t WHERE t.name = 'tag1') MEMBER OF s.tags", captureJpql());
     }
 
     @Test
     public void shouldQuerySipsByOneTagWithWhiteSpace() {
         boundary.querySips(new Query("  \t\r\n+" + TAG1 + "\t\n\r     "));
 
-        assertEquals("SELECT s from SipEntity s " //
-                + "WHERE 'tag1' MEMBER OF s.tags", captureJpql());
+        assertEquals("SELECT s FROM SipEntity s " //
+                + "WHERE (SELECT t FROM TagEntity t WHERE t.name = 'tag1') MEMBER OF s.tags", captureJpql());
     }
 
     @Test
     public void shouldQuerySipsByTwoTags() {
         boundary.querySips(new Query("+" + TAG1 + " +" + TAG2));
 
-        assertEquals("SELECT s from SipEntity s " //
-                + "WHERE 'tag1' MEMBER OF s.tags " //
-                + "AND 'tag2' MEMBER OF s.tags", captureJpql());
+        assertEquals("SELECT s FROM SipEntity s " //
+                + "WHERE (SELECT t FROM TagEntity t WHERE t.name = 'tag1') MEMBER OF s.tags " //
+                + "AND (SELECT t FROM TagEntity t WHERE t.name = 'tag2') MEMBER OF s.tags", captureJpql());
     }
 
     @Test
     public void shouldQuerySipsByTwoTagsAndAdditionalWhiteSpace() {
         boundary.querySips(new Query("+" + TAG1 + "   \r\n\t   +" + TAG2));
 
-        assertEquals("SELECT s from SipEntity s " //
-                + "WHERE 'tag1' MEMBER OF s.tags " //
-                + "AND 'tag2' MEMBER OF s.tags", captureJpql());
+        assertEquals("SELECT s FROM SipEntity s " //
+                + "WHERE (SELECT t FROM TagEntity t WHERE t.name = 'tag1') MEMBER OF s.tags " //
+                + "AND (SELECT t FROM TagEntity t WHERE t.name = 'tag2') MEMBER OF s.tags", captureJpql());
     }
 
     @Test
     public void shouldQuerySipsByExcludingTag() {
         boundary.querySips(new Query("-" + TAG1));
 
-        assertEquals("SELECT s from SipEntity s " //
-                + "WHERE 'tag1' NOT MEMBER OF s.tags", captureJpql());
+        assertEquals(
+                "SELECT s FROM SipEntity s " //
+                        + "WHERE (SELECT t FROM TagEntity t WHERE t.name = 'tag1') NOT MEMBER OF s.tags",
+                captureJpql());
     }
 }

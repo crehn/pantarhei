@@ -34,7 +34,7 @@ public class SipBoundary {
         if (!guid.equals(sip.getGuid()))
             throw new IllegalArgumentException("guid in path must match guid in sip");
 
-        facade.storeSip(sip);
+        facade.putSip(sip);
     }
 
     @GET
