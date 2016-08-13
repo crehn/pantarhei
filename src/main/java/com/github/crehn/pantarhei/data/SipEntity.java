@@ -57,7 +57,7 @@ public class SipEntity {
     }
 
     public void setSourceUri(URI sourceUri) {
-        this.sourceUri = sourceUri.toString();
+        this.sourceUri = sourceUri == null ? null : sourceUri.toString();
     }
 
     public Sip toApi() {

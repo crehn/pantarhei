@@ -31,6 +31,8 @@ public class SipBoundary {
     @PUT
     @Path("/{guid}")
     public void putSip(@PathParam("guid") UUID guid, Sip sip) {
+        if (sip.getGuid() == null)
+            sip.setGuid(guid);
         if (!guid.equals(sip.getGuid()))
             throw new IllegalArgumentException("guid in path must match guid in sip");
 

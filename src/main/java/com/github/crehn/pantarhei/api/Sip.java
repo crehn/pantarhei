@@ -19,7 +19,6 @@ import lombok.experimental.Wither;
 @JsonInclude(value = Include.NON_EMPTY)
 public class Sip {
 
-    @NonNull
     private UUID guid;
     @NonNull
     @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")

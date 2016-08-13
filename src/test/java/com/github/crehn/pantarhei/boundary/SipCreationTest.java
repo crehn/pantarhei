@@ -1,6 +1,7 @@
 package com.github.crehn.pantarhei.boundary;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,6 +30,14 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldFailCreatingSipForWrongLocation() {
         boundary.putSip(OTHER_GUID, SIP);
+    }
+
+    @Test
+    public void shouldStoreNewSipWithoutGuid() {
+        boundary.putSip(GUID, SIP.withGuid(null));
+
+        SipEntity sipEntity = captureSipEntity();
+        assertNewSipEntity(sipEntity);
     }
 
     @Test
@@ -114,6 +123,25 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
         boundary.putSip(GUID, sip);
 
         assertSipEntity(sip, sipEntity);
+    }
+
+    @Test
+    public void shouldNotDeleteGuidWhenReplacingSipInDb() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        Sip sip = Sip.builder() //
+                .guid(null) //
+                .title(TITLE + "2") //
+                .build();
+        boundary.putSip(GUID, sip);
+
+        assertEquals(GUID, sipEntity.getGuid());
+        assertEquals(TITLE + "2", sipEntity.getTitle());
+        assertEquals(null, sipEntity.getSourceUri());
+        assertEquals(null, sipEntity.getSummary());
+        assertEquals(emptyList(), sipEntity.getTags());
+        assertEquals(null, sipEntity.getText());
     }
 
     @Test
