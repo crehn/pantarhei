@@ -2,11 +2,12 @@ package com.github.crehn.pantarhei.boundary;
 
 import static com.github.t1.log.LogLevel.INFO;
 
+import java.io.StringReader;
 import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
-import javax.json.JsonObject;
+import javax.json.*;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 
@@ -46,11 +47,19 @@ public class SipBoundary {
 
     @PATCH
     @Path(SINGLE_SIP)
-    public void patchSip(@PathParam(GUID_PARAM) UUID guid, JsonObject patch) {
+    public void patchSip(@PathParam(GUID_PARAM) UUID guid, String patchString) {
+        JsonObject patch = toJsonObject(patchString);
         if (patch.containsKey(GUID_PARAM))
             throw new UnknownPropertyException("guid may not be changed");
 
         facade.patchSip(guid, patch);
+    }
+
+    private JsonObject toJsonObject(String string) {
+        try (StringReader sReader = new StringReader(string); //
+                JsonReader reader = Json.createReader(sReader)) {
+            return reader.readObject();
+        }
     }
 
     @DELETE

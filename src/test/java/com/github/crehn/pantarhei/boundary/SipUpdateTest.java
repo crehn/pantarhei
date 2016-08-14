@@ -76,7 +76,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         givenSipEntity(sipEntity);
 
         JsonObject patch = Json.createObjectBuilder().build();
-        boundary.patchSip(GUID, patch);
+        boundary.patchSip(GUID, patch.toString());
 
         assertSipEntity(SIP, sipEntity);
     }
@@ -84,7 +84,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
     @Test(expected = SipNotFoundException.class)
     public void shouldFailToPatchUnknownSip() {
         JsonObject patch = Json.createObjectBuilder().build();
-        boundary.patchSip(OTHER_GUID, patch);
+        boundary.patchSip(OTHER_GUID, patch.toString());
     }
 
     @Test(expected = UnknownPropertyException.class)
@@ -95,7 +95,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         JsonObject patch = Json.createObjectBuilder() //
                 .add("unknown", "value") //
                 .build();
-        boundary.patchSip(GUID, patch);
+        boundary.patchSip(GUID, patch.toString());
     }
 
     @Test(expected = UnknownPropertyException.class)
@@ -106,7 +106,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         JsonObject patch = Json.createObjectBuilder() //
                 .add("guid", UUID.randomUUID().toString()) //
                 .build();
-        boundary.patchSip(GUID, patch);
+        boundary.patchSip(GUID, patch.toString());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         JsonObject patch = Json.createObjectBuilder() //
                 .add("text", JsonValue.NULL) //
                 .build();
-        boundary.patchSip(GUID, patch);
+        boundary.patchSip(GUID, patch.toString());
 
         assertSipEntity(SIP.withText(null), sipEntity);
     }
@@ -130,7 +130,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         JsonObject patch = Json.createObjectBuilder() //
                 .add("title", TITLE + "2") //
                 .build();
-        boundary.patchSip(GUID, patch);
+        boundary.patchSip(GUID, patch.toString());
 
         assertSipEntity(SIP.withTitle(TITLE + "2"), sipEntity);
     }
@@ -143,7 +143,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         JsonObject patch = Json.createObjectBuilder() //
                 .add("sourceUri", SOURCE_URI + "2") //
                 .build();
-        boundary.patchSip(GUID, patch);
+        boundary.patchSip(GUID, patch.toString());
 
         assertSipEntity(SIP.withSourceUri(URI.create(SOURCE_URI.toString() + "2")), sipEntity);
     }
@@ -160,7 +160,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
                                 .add(TAG2) //
                                 .build()) //
                 .build();
-        boundary.patchSip(GUID, patch);
+        boundary.patchSip(GUID, patch.toString());
 
         assertThat(sipEntity.getTags()) //
                 .extracting(TagEntity::getName) //
