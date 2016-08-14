@@ -120,8 +120,8 @@ public class SipFacade {
         if (JsonValue.NULL.equals(value))
             setter.invoke(sip, new Object[] { null });
         else if (value.getValueType() == ValueType.ARRAY) {
-            List<JsonString> JsonStrings = ((JsonArray) value).getValuesAs(JsonString.class);
-            setter.invoke(sip, map(JsonStrings, JsonString::getString));
+            List<JsonString> jsonStrings = ((JsonArray) value).getValuesAs(JsonString.class);
+            setter.invoke(sip, map(jsonStrings, JsonString::getString));
         } else {
             setter.invoke(sip, createNewValue(value, setter.getParameterTypes()[0]));
         }

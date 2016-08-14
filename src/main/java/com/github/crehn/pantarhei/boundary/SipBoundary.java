@@ -20,19 +20,21 @@ import com.github.t1.log.Logged;
 @Transactional
 @Logged(level = INFO)
 public class SipBoundary {
+    private static final String GUID_PARAM = "guid";
+    private static final String SINGLE_SIP = "/{" + GUID_PARAM + "}";
 
     @Inject
     private SipFacade facade;
 
     @GET
-    @Path("/{guid}")
-    public Sip getSip(@PathParam("guid") UUID guid) {
+    @Path(SINGLE_SIP)
+    public Sip getSip(@PathParam(GUID_PARAM) UUID guid) {
         return facade.getSip(guid);
     }
 
     @PUT
-    @Path("/{guid}")
-    public void putSip(@PathParam("guid") UUID guid, Sip sip) {
+    @Path(SINGLE_SIP)
+    public void putSip(@PathParam(GUID_PARAM) UUID guid, Sip sip) {
         if (sip.getGuid() == null)
             sip.setGuid(guid);
         if (!guid.equals(sip.getGuid()))
@@ -43,17 +45,17 @@ public class SipBoundary {
     }
 
     @PATCH
-    @Path("/{guid}")
-    public void patchSip(@PathParam("guid") UUID guid, JsonObject patch) {
-        if (patch.containsKey("guid"))
+    @Path(SINGLE_SIP)
+    public void patchSip(@PathParam(GUID_PARAM) UUID guid, JsonObject patch) {
+        if (patch.containsKey(GUID_PARAM))
             throw new UnknownPropertyException("guid may not be changed");
 
         facade.patchSip(guid, patch);
     }
 
     @DELETE
-    @Path("/{guid}")
-    public void deleteSip(@PathParam("guid") UUID guid) {
+    @Path(SINGLE_SIP)
+    public void deleteSip(@PathParam(GUID_PARAM) UUID guid) {
         facade.deleteSip(guid);
     }
 
