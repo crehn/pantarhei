@@ -19,7 +19,7 @@ public class AbstractSipBoundaryTest {
     protected static final UUID GUID = UUID.randomUUID();
     protected static final UUID OTHER_GUID = UUID.randomUUID();
     protected static final String TITLE = "title";
-    protected static final String SUMMARY = "summary";
+    protected static final String NOTES = "notes";
     protected static final String TEXT = "text";
     protected static final URI SOURCE_URI = URI.create("http://exampole.com/foobar");
     protected static final String TAG1 = "tag1";
@@ -36,7 +36,7 @@ public class AbstractSipBoundaryTest {
         return Sip.builder() //
                 .guid(GUID) //
                 .title(TITLE) //
-                .summary(SUMMARY) //
+                .notes(NOTES) //
                 .text(TEXT) //
                 .sourceUri(SOURCE_URI);
     }
@@ -46,7 +46,7 @@ public class AbstractSipBoundaryTest {
                 .id(NumberGenerator.nextInt()) //
                 .guid(GUID) //
                 .title(TITLE) //
-                .summary(SUMMARY) //
+                .notes(NOTES) //
                 .text(TEXT) //
                 .sourceUri(SOURCE_URI) //
                 .tag(TAG_ENTITY1) //
@@ -80,7 +80,7 @@ public class AbstractSipBoundaryTest {
     protected void assertSipEntity(Sip expected, SipEntity sipEntity) {
         assertEquals(expected.getGuid(), sipEntity.getGuid());
         assertEquals(expected.getTitle(), sipEntity.getTitle());
-        assertEquals(expected.getSummary(), sipEntity.getSummary());
+        assertEquals(expected.getNotes(), sipEntity.getNotes());
         assertEquals(expected.getText(), sipEntity.getText());
         assertEquals(expected.getSourceUri(), sipEntity.getSourceUri());
     }

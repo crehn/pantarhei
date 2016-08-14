@@ -37,7 +37,7 @@ public class MarshallingTest {
         Sip sip = Sip.builder() //
                 .guid(UUID.fromString("9ebb1f74-f5d3-4952-92d9-6a631358b8a0")) //
                 .title("title") //
-                .summary("summary") //
+                .notes("notes") //
                 .text("text") //
                 .sourceUri(URI.create("http://example.com/foobar")) //
                 .tag("foo") //
@@ -50,7 +50,7 @@ public class MarshallingTest {
         assertEquals(("{" //
                 + "'guid':'9ebb1f74-f5d3-4952-92d9-6a631358b8a0'," //
                 + "'title':'title'," //
-                + "'summary':'summary'," //
+                + "'notes':'notes'," //
                 + "'text':'text'," //
                 + "'sourceUri':'http://example.com/foobar'," //
                 + "'tags':['foo','bar']" //

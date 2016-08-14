@@ -24,7 +24,7 @@ public class Sip {
     @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
     private String title;
     @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
-    private String summary;
+    private String notes;
     @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
     private String text;
     private URI sourceUri;

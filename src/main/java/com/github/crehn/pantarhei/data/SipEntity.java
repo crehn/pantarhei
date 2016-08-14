@@ -46,7 +46,7 @@ public class SipEntity {
 
     private UUID guid;
     private String title;
-    private String summary;
+    private String notes;
     private String text;
     private String sourceUri;
 
@@ -68,7 +68,7 @@ public class SipEntity {
         return Sip.builder() //
                 .guid(guid) //
                 .title(title) //
-                .summary(summary) //
+                .notes(notes) //
                 .text(text) //
                 .sourceUri(getSourceUri()) //
                 .tags(toApi(tags)) //

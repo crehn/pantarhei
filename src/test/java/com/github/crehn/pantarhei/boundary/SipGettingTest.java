@@ -39,7 +39,7 @@ public class SipGettingTest extends AbstractSipBoundaryTest {
     private void assertSip(SipEntity sipEntity, Sip result) {
         assertEquals(sipEntity.getGuid(), result.getGuid());
         assertEquals(sipEntity.getTitle(), result.getTitle());
-        assertEquals(sipEntity.getSummary(), result.getSummary());
+        assertEquals(sipEntity.getNotes(), result.getNotes());
         assertEquals(sipEntity.getText(), result.getText());
         assertEquals(sipEntity.getSourceUri(), result.getSourceUri());
         assertThat(result.getTags()).containsExactly(TAG1, TAG2);

@@ -29,7 +29,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         Sip sip = Sip.builder() //
                 .guid(GUID) //
                 .title(TITLE + "2") //
-                .summary(SUMMARY + "2") //
+                .notes(NOTES + "2") //
                 .text(TEXT + "2") //
                 .sourceUri(URI.create(SOURCE_URI.toString() + "2")) //
                 .build();
@@ -52,7 +52,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         assertEquals(GUID, sipEntity.getGuid());
         assertEquals(TITLE + "2", sipEntity.getTitle());
         assertEquals(null, sipEntity.getSourceUri());
-        assertEquals(null, sipEntity.getSummary());
+        assertEquals(null, sipEntity.getNotes());
         assertEquals(emptyList(), sipEntity.getTags());
         assertEquals(null, sipEntity.getText());
     }

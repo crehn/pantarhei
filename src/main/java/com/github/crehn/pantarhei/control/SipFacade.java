@@ -48,7 +48,7 @@ public class SipFacade {
         return SipEntity.builder() //
                 .guid(sip.getGuid()) //
                 .title(sip.getTitle()) //
-                .summary(sip.getSummary()) //
+                .notes(sip.getNotes()) //
                 .text(sip.getText()) //
                 .sourceUri(sip.getSourceUri()) //
                 .tags(getTagEntities(sip.getTags())) //
@@ -57,7 +57,7 @@ public class SipFacade {
 
     private void replaceData(SipEntity entity, Sip sip) {
         entity.setTitle(sip.getTitle());
-        entity.setSummary(sip.getSummary());
+        entity.setNotes(sip.getNotes());
         entity.setText(sip.getText());
         entity.setSourceUri(sip.getSourceUri());
         entity.setTags(getTagEntities(sip.getTags()));
