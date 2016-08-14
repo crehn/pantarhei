@@ -5,8 +5,8 @@ import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import java.net.URI;
 import java.util.UUID;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -59,33 +59,28 @@ public class AnnotatedExceptionMapper implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception exception) {
+        Response response;
+        Problem problem;
         MapToProblem annotation = exception.getClass().getAnnotation(MapToProblem.class);
         if (annotation != null) {
-            Problem problem = toProblem(exception, annotation);
-            if (isClientProblem(annotation))
-                log.debug("Mapping {} to {}; problem instance: {}", exception.getClass().getName(), annotation.status(),
-                        problem.getInstance());
-            else
-                log.warn("Mapping {} to {}; problem instance: {}", exception.getClass().getName(), annotation.status(),
-                        problem.getInstance());
-            return toResponse(annotation.status(), problem);
+            problem = toProblem(exception, annotation);
+            response = toResponse(annotation.status(), problem);
+        } else if (exception instanceof WebApplicationException) {
+            WebApplicationException webApplicationException = (WebApplicationException) exception;
+            problem = toProblem(webApplicationException);
+            response = toResponse(webApplicationException, problem);
         } else {
-            Problem problem = defaultProblem(exception);
-            log.error("Mapping unexpected exception to 500; problem instance: " + problem.getInstance(), exception);
-            return toResponse(INTERNAL_SERVER_ERROR, problem);
+            problem = defaultProblem(exception);
+            response = toResponse(INTERNAL_SERVER_ERROR, problem);
+            log.error("Unexpected exception", exception);
         }
-    }
-
-    private boolean isClientProblem(MapToProblem annotation) {
-        return annotation.status().getFamily() != Family.SERVER_ERROR;
-    }
-
-    private Response toResponse(Status status, Problem problem) {
-        return Response //
-                .status(status) //
-                .type(CONTENT_TYPE) //
-                .entity(problem) //
-                .build();
+        if (isClientProblem(problem))
+            log.debug("Mapping {} to {}; problem instance: {}", exception.getClass().getName(), response.getStatus(),
+                    problem.getInstance());
+        else
+            log.warn("Mapping {} to {}; problem instance: {}", exception.getClass().getName(), response.getStatus(),
+                    problem.getInstance());
+        return response;
     }
 
     private Problem toProblem(Exception exception, MapToProblem annotation) {
@@ -97,6 +92,32 @@ public class AnnotatedExceptionMapper implements ExceptionMapper<Exception> {
                 .build();
     }
 
+    private Response toResponse(StatusType status, Problem problem) {
+        return Response //
+                .status(status) //
+                .type(CONTENT_TYPE) //
+                .entity(problem) //
+                .build();
+    }
+
+    private Problem toProblem(WebApplicationException webApplicationException) {
+        StatusType status = webApplicationException.getResponse().getStatusInfo();
+        return Problem.builder() //
+                .type(URI.create(URN_PROBLEM_PREFIX + webApplicationException.getClass().getName() + ":"
+                        + status.getStatusCode()))//
+                .title(status.getReasonPhrase()) //
+                .status(status) //
+                .detail(webApplicationException.getMessage()) //
+                .build();
+    }
+
+    private Response toResponse(WebApplicationException webApplicationException, Problem problem) {
+        return Response.fromResponse(webApplicationException.getResponse()) //
+                .type(CONTENT_TYPE) //
+                .entity(problem) //
+                .build();
+    }
+
     private Problem defaultProblem(Exception exception) {
         return Problem.builder() //
                 .type(URI.create(URN_PROBLEM_PREFIX + exception.getClass().getName())) //
@@ -104,5 +125,9 @@ public class AnnotatedExceptionMapper implements ExceptionMapper<Exception> {
                 .status(INTERNAL_SERVER_ERROR) //
                 .detail(exception.getMessage()) //
                 .build();
+    }
+
+    private boolean isClientProblem(Problem problem) {
+        return problem.getStatus().getFamily() != Family.SERVER_ERROR;
     }
 }

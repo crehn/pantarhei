@@ -94,6 +94,11 @@
 
         <!-- libs -->
         <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.t1</groupId>
             <artifactId>logging-interceptor</artifactId>
             <version>3.0.0</version>
@@ -130,9 +135,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.0.4</version>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>3.0.19.Final</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
