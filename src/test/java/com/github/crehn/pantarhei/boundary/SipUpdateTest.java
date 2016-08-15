@@ -32,6 +32,11 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
                 .notes(NOTES + "2") //
                 .text(TEXT + "2") //
                 .sourceUri(URI.create(SOURCE_URI.toString() + "2")) //
+                .status(STATUS + "2") //
+                .originTimestamp(ORIGIN_TIMESTAMP.plusMillis(10)) //
+                .created(CREATED.plusMillis(10)) //
+                .modified(MODIFIED.plusMillis(10)) //
+                .due(DUE.plusMillis(10)) //
                 .build();
         boundary.putSip(GUID, sip);
 

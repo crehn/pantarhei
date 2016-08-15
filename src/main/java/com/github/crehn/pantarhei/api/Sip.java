@@ -1,6 +1,7 @@
 package com.github.crehn.pantarhei.api;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,4 +31,12 @@ public class Sip {
     private URI sourceUri;
     @Singular
     private List<String> tags;
+
+    @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
+    private String status;
+
+    private Instant originTimestamp;
+    private Instant created;
+    private Instant modified;
+    private Instant due;
 }

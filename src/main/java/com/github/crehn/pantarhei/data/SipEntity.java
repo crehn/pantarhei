@@ -8,6 +8,7 @@ import static javax.persistence.FetchType.EAGER;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.*;
 
 import javax.persistence.*;
@@ -50,6 +51,13 @@ public class SipEntity {
     private String text;
     private String sourceUri;
 
+    private String status;
+
+    private Instant originTimestamp;
+    private Instant created;
+    private Instant modified;
+    private Instant due;
+
     @Singular
     @ManyToMany(fetch = EAGER, cascade = ALL)
     @JoinTable(joinColumns = { @JoinColumn(name = "sip_id") }, //
@@ -72,6 +80,11 @@ public class SipEntity {
                 .text(text) //
                 .sourceUri(getSourceUri()) //
                 .tags(toApi(tags)) //
+                .status(status) //
+                .originTimestamp(originTimestamp) //
+                .created(created) //
+                .modified(modified) //
+                .due(due) //
                 .build();
     }
 

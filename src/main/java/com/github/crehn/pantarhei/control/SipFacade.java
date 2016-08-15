@@ -52,6 +52,11 @@ public class SipFacade {
                 .text(sip.getText()) //
                 .sourceUri(sip.getSourceUri()) //
                 .tags(getTagEntities(sip.getTags())) //
+                .status(sip.getStatus()) //
+                .originTimestamp(sip.getOriginTimestamp()) //
+                .created(sip.getCreated()) //
+                .modified(sip.getModified()) //
+                .due(sip.getDue()) //
                 .build();
     }
 
@@ -61,6 +66,11 @@ public class SipFacade {
         entity.setText(sip.getText());
         entity.setSourceUri(sip.getSourceUri());
         entity.setTags(getTagEntities(sip.getTags()));
+        entity.setStatus(sip.getStatus());
+        entity.setOriginTimestamp(sip.getOriginTimestamp());
+        entity.setCreated(sip.getCreated());
+        entity.setModified(sip.getModified());
+        entity.setDue(sip.getDue());
     }
 
     private List<TagEntity> getTagEntities(List<String> tags) {
