@@ -15,7 +15,6 @@ import javax.ws.rs.*;
 import com.github.crehn.pantarhei.api.Query;
 import com.github.crehn.pantarhei.api.Sip;
 import com.github.crehn.pantarhei.control.SipFacade;
-import com.github.crehn.pantarhei.control.UnknownPropertyException;
 import com.github.t1.log.Logged;
 
 @Path("/sips")
@@ -68,8 +67,10 @@ public class SipBoundary {
     @Path(SINGLE_SIP)
     public void patchSip(@PathParam(GUID_PARAM) UUID guid, String patchString) {
         JsonObject patch = toJsonObject(patchString);
-        if (patch.containsKey(GUID_PARAM))
-            throw new UnknownPropertyException("guid may not be changed");
+        if (patch.containsKey("guid"))
+            throw new PatchNotAllowedException("guid may not be changed");
+        if (patch.containsKey("status") && patch.isNull("status"))
+            throw new PatchNotAllowedException("status may not be set to null");
 
         facade.patchSip(guid, patch);
     }

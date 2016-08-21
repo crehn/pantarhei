@@ -105,7 +105,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         boundary.patchSip(GUID, patch.toString());
     }
 
-    @Test(expected = UnknownPropertyException.class)
+    @Test(expected = PatchNotAllowedException.class)
     public void shouldFailToPatchSipWithGuid() {
         SipEntity sipEntity = createSipEntity();
         givenSipEntity(sipEntity);
@@ -225,5 +225,16 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         boundary.putSip(GUID, sip);
 
         assertThat(sipEntity.getStatus()).isEqualTo("open");
+    }
+
+    @Test(expected = PatchNotAllowedException.class)
+    public void shouldFailSettingStatusToNull() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        JsonObject patch = Json.createObjectBuilder() //
+                .add("status", JsonValue.NULL) //
+                .build();
+        boundary.patchSip(GUID, patch.toString());
     }
 }
