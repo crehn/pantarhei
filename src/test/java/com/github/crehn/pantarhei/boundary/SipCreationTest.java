@@ -1,5 +1,6 @@
 package com.github.crehn.pantarhei.boundary;
 
+import static java.time.Instant.now;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -7,12 +8,15 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.Duration;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.github.crehn.pantarhei.api.Sip;
 import com.github.crehn.pantarhei.data.SipEntity;
 import com.github.crehn.pantarhei.data.TagEntity;
 
@@ -99,5 +103,19 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
     private void assertContainsTagFromDb(SipEntity sipEntity) {
         assertThat(sipEntity.getTags()) //
                 .contains(TAG_ENTITY1);
+    }
+
+    @Test
+    public void shouldSetCreationDateAutomatically() {
+        Sip sip = generateSip() //
+                .created(null) //
+                .modified(null) //
+                .build();
+
+        boundary.putSip(GUID, sip);
+
+        SipEntity sipEntity = captureSipEntity();
+        assertThat(Duration.between(sipEntity.getCreated(), now())).isLessThan(ONE_SECOND);
+        assertModificationTimestampSet(sipEntity);
     }
 }

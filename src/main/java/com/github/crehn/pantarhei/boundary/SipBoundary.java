@@ -1,6 +1,7 @@
 package com.github.crehn.pantarhei.boundary;
 
 import static com.github.t1.log.LogLevel.INFO;
+import static java.time.Instant.now;
 
 import java.io.StringReader;
 import java.util.List;
@@ -36,13 +37,25 @@ public class SipBoundary {
     @PUT
     @Path(SINGLE_SIP)
     public void putSip(@PathParam(GUID_PARAM) UUID guid, Sip sip) {
+        setGuidIfMissing(guid, sip);
+        setTimestampsIfMissing(sip);
+
+        facade.putSip(sip);
+    }
+
+    private void setGuidIfMissing(UUID guid, Sip sip) {
         if (sip.getGuid() == null)
             sip.setGuid(guid);
         if (!guid.equals(sip.getGuid()))
             throw new IllegalArgumentException(
                     "guid in path must match guid in sip. You don't need to specify it in the sip anyway.");
+    }
 
-        facade.putSip(sip);
+    private void setTimestampsIfMissing(Sip sip) {
+        if (sip.getCreated() == null)
+            sip.setCreated(now());
+        if (sip.getModified() == null)
+            sip.setModified(now());
     }
 
     @PATCH

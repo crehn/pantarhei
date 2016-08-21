@@ -1,11 +1,13 @@
 package com.github.crehn.pantarhei.boundary;
 
+import static java.time.Instant.now;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
-import java.time.Instant;
+import java.time.*;
 import java.util.UUID;
 
 import org.mockito.*;
@@ -29,7 +31,7 @@ public class AbstractSipBoundaryTest {
     protected static final TagEntity TAG_ENTITY1 = new TagEntity(TAG1);
     protected static final TagEntity TAG_ENTITY2 = new TagEntity(TAG2);
     protected static final String STATUS = "done";
-    protected static final Instant ORIGIN_TIMESTAMP = Instant.now();
+    protected static final Instant ORIGIN_TIMESTAMP = Instant.now().minus(Period.ofDays(1));
     protected static final Instant CREATED = ORIGIN_TIMESTAMP.plusSeconds(1);
     protected static final Instant MODIFIED = ORIGIN_TIMESTAMP.plusSeconds(2);
     protected static final Instant DUE = ORIGIN_TIMESTAMP.plusSeconds(3);
@@ -37,6 +39,7 @@ public class AbstractSipBoundaryTest {
             .tag(TAG1) //
             .tag(TAG2) //
             .build();
+    protected static final Duration ONE_SECOND = Duration.ofSeconds(1);
 
     protected static SipBuilder generateSip() {
         return Sip.builder() //
@@ -102,7 +105,10 @@ public class AbstractSipBoundaryTest {
         assertEquals(expected.getStatus(), sipEntity.getStatus());
         assertEquals(expected.getOriginTimestamp(), sipEntity.getOriginTimestamp());
         assertEquals(expected.getCreated(), sipEntity.getCreated());
-        assertEquals(expected.getModified(), sipEntity.getModified());
         assertEquals(expected.getDue(), sipEntity.getDue());
+    }
+
+    protected void assertModificationTimestampSet(SipEntity sipEntity) {
+        assertThat(Duration.between(sipEntity.getModified(), now())).isLessThan(ONE_SECOND);
     }
 }

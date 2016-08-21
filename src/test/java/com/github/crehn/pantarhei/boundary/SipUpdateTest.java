@@ -1,5 +1,6 @@
 package com.github.crehn.pantarhei.boundary;
 
+import static java.time.Instant.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,7 +77,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
     }
 
     @Test
-    public void shouldPatchSipInDbChangingNothing() {
+    public void shouldPatchSipInDbChangingNothingButModificationDate() {
         SipEntity sipEntity = createSipEntity();
         givenSipEntity(sipEntity);
 
@@ -84,6 +85,7 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         boundary.patchSip(GUID, patch.toString());
 
         assertSipEntity(SIP, sipEntity);
+        assertModificationTimestampSet(sipEntity);
     }
 
     @Test(expected = SipNotFoundException.class)
@@ -170,5 +172,45 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
         assertThat(sipEntity.getTags()) //
                 .extracting(TagEntity::getName) //
                 .containsExactlyInAnyOrder(TAG2, TAG3);
+    }
+
+    @Test
+    public void shouldSetModificationDateAutomaticallyOnPut() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        Sip sip = generateSip() //
+                .modified(null) //
+                .build();
+
+        boundary.putSip(GUID, sip);
+
+        assertModificationTimestampSet(sipEntity);
+    }
+
+    @Test
+    public void shouldSetModificationDateAutomaticallyOnPatch() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        JsonObject patch = Json.createObjectBuilder() //
+                .add("title", TITLE + "2") //
+                .build();
+        boundary.patchSip(GUID, patch.toString());
+
+        assertModificationTimestampSet(sipEntity);
+    }
+
+    @Test
+    public void shouldSetModificationDateManually() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        JsonObject patch = Json.createObjectBuilder() //
+                .add("modified", now().plusSeconds(60).toString()) //
+                .build();
+        boundary.patchSip(GUID, patch.toString());
+
+        assertModificationTimestampSet(sipEntity);
     }
 }

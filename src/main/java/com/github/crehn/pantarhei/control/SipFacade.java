@@ -2,11 +2,13 @@ package com.github.crehn.pantarhei.control;
 
 import static com.github.crehn.listquery.Just.map;
 import static com.github.crehn.listquery.ListQuery.from;
+import static java.time.Instant.now;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.time.Instant;
 import java.util.*;
 
 import javax.inject.Inject;
@@ -109,6 +111,7 @@ public class SipFacade {
         if (sipEntity == null)
             throw new SipNotFoundException(guid);
         Sip sip = sipEntity.toApi();
+        sip.setModified(now());
 
         patch.forEach((property, value) -> {
             log.debug("patching property [{}] to new value [{}] in [{}]", property, value, sip);
@@ -139,6 +142,9 @@ public class SipFacade {
 
     @SneakyThrows
     private Object createNewValue(JsonValue value, Class<?> type) {
+        if (type.equals(Instant.class))
+            return Instant.parse(((JsonString) value).getString());
+
         Constructor<?> constructor = type.getConstructor(String.class);
         return constructor.newInstance(((JsonString) value).getString());
     }

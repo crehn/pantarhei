@@ -19,8 +19,8 @@ import lombok.experimental.Wither;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonInclude(value = Include.NON_EMPTY)
 public class Sip {
-
     private static final String FALSE_POSITIVE = "ES_COMPARING_PARAMETER_STRING_WITH_EQ";
+
     private UUID guid;
     @NonNull
     @SuppressFBWarnings(FALSE_POSITIVE)
