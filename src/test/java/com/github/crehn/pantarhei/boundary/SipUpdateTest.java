@@ -213,4 +213,17 @@ public class SipUpdateTest extends AbstractSipBoundaryTest {
 
         assertModificationTimestampSet(sipEntity);
     }
+
+    @Test
+    public void shouldSetStatusAutomaticallyToOpen() {
+        SipEntity sipEntity = createSipEntity();
+        givenSipEntity(sipEntity);
+
+        Sip sip = generateSip() //
+                .status(null) //
+                .build();
+        boundary.putSip(GUID, sip);
+
+        assertThat(sipEntity.getStatus()).isEqualTo("open");
+    }
 }

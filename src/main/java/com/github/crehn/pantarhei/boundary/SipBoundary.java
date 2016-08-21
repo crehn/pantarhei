@@ -39,6 +39,7 @@ public class SipBoundary {
     public void putSip(@PathParam(GUID_PARAM) UUID guid, Sip sip) {
         setGuidIfMissing(guid, sip);
         setTimestampsIfMissing(sip);
+        setStatusIfMissing(sip);
 
         facade.putSip(sip);
     }
@@ -56,6 +57,11 @@ public class SipBoundary {
             sip.setCreated(now());
         if (sip.getModified() == null)
             sip.setModified(now());
+    }
+
+    private void setStatusIfMissing(Sip sip) {
+        if (sip.getStatus() == null)
+            sip.setStatus("open");
     }
 
     @PATCH

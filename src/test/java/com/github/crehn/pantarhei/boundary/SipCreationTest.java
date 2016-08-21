@@ -118,4 +118,16 @@ public class SipCreationTest extends AbstractSipBoundaryTest {
         assertThat(Duration.between(sipEntity.getCreated(), now())).isLessThan(ONE_SECOND);
         assertModificationTimestampSet(sipEntity);
     }
+
+    @Test
+    public void shouldSetStatusAutomaticallyToOpen() {
+        Sip sip = generateSip() //
+                .status(null) //
+                .build();
+
+        boundary.putSip(GUID, sip);
+
+        SipEntity sipEntity = captureSipEntity();
+        assertThat(sipEntity.getStatus()).isEqualTo("open");
+    }
 }
