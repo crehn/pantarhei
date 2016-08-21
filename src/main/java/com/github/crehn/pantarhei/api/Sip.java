@@ -20,19 +20,20 @@ import lombok.experimental.Wither;
 @JsonInclude(value = Include.NON_EMPTY)
 public class Sip {
 
+    private static final String FALSE_POSITIVE = "ES_COMPARING_PARAMETER_STRING_WITH_EQ";
     private UUID guid;
     @NonNull
-    @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
+    @SuppressFBWarnings(FALSE_POSITIVE)
     private String title;
-    @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
+    @SuppressFBWarnings(FALSE_POSITIVE)
     private String notes;
-    @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
+    @SuppressFBWarnings(FALSE_POSITIVE)
     private String text;
     private URI sourceUri;
     @Singular
     private List<String> tags;
 
-    @SuppressFBWarnings("ES_COMPARING_PARAMETER_STRING_WITH_EQ")
+    @SuppressFBWarnings(FALSE_POSITIVE)
     private String status;
 
     private Instant originTimestamp;
