@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.crehn.pantarhei.boundary.ObjectMapperContextResolver;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -24,8 +23,6 @@ public class MarshallingTest {
     @Before
     public void setup() {
         json = resolver.getContext(ObjectMapper.class);
-        json.findAndRegisterModules();
-        json.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
     @Test
