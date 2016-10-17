@@ -24,7 +24,11 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        
         <version.wildfly.swarm>2016.10.0</version.wildfly.swarm>
+        <version.jackson>2.7.4</version.jackson>
+        <version.resteasy>3.0.19.Final</version.resteasy>
+        
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <additionalparam>-Xdoclint:-missing</additionalparam>
@@ -70,11 +74,17 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Java EE 7 dependency -->
+        <!-- Java EE 7, resteasy -->
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>${version.resteasy}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -121,7 +131,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.7.4</version>
+            <version>${version.jackson}</version>
         </dependency>
 
         <!-- test dependencies -->
@@ -147,12 +157,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.1.7</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxrs</artifactId>
-            <version>3.1.0.CR2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

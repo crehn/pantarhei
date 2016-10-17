@@ -12,6 +12,8 @@ import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.jboss.resteasy.spi.DefaultOptionsMethodException;
+
 import lombok.Builder;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +61,9 @@ public class AnnotatedExceptionMapper implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception exception) {
+        if (exception instanceof DefaultOptionsMethodException)
+            return ((DefaultOptionsMethodException) exception).getResponse();
+
         Response response;
         Problem problem;
         MapToProblem annotation = exception.getClass().getAnnotation(MapToProblem.class);

@@ -1,7 +1,6 @@
 package com.github.crehn.pantarhei.boundary;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.net.URI;
 
@@ -9,6 +8,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.jboss.resteasy.spi.DefaultOptionsMethodException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -81,5 +81,13 @@ public class ExceptionMapperTest {
         assertEquals(Status.METHOD_NOT_ALLOWED, problem.getStatus());
         assertEquals("message", problem.getDetail());
         assertNotNull(problem.getInstance());
+    }
+
+    @Test
+    public void shouldNotMapDefaultOptionsMethodException() {
+        Response response = Response.ok().build();
+        Response result = mapper.toResponse(new DefaultOptionsMethodException("message", response));
+
+        assertTrue(response == result);
     }
 }
