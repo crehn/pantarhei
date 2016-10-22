@@ -15,15 +15,15 @@ CREATE TABLE sips (
     origintimestamp timestamp with time zone
 );
 
-CREATE TABLE sips_tags (
-    sip_id integer NOT NULL REFERENCES sips(id),
-    tag_id integer NOT NULL REFERENCES tags(id),
-    PRIMARY KEY (sip_id, tag_id)
-);
-
 CREATE TABLE tags (
     id integer PRIMARY KEY,
     name character varying UNIQUE NOT NULL,
     version integer
+);
+
+CREATE TABLE sips_tags (
+    sip_id integer NOT NULL REFERENCES sips(id),
+    tag_id integer NOT NULL REFERENCES tags(id),
+    PRIMARY KEY (sip_id, tag_id)
 );
 
